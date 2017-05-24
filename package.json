@@ -1,0 +1,22 @@
+{
+  "name": "rest-api-thingy",
+  "version": "1.0.0",
+  "description": "API RESTFUL Project of Thingy with NodeJS and Express",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frangaliana/rest-api-thingy.git"
+  },
+  "author": "Fran Galiana",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/frangaliana/rest-api-thingy/issues"
+  },
+  "homepage": "https://github.com/frangaliana/rest-api-thingy#readme",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}
