@@ -4,6 +4,7 @@
   "description": "API RESTFUL Project of Thingy with NodeJS and Express",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,6 +18,10 @@
   },
   "homepage": "https://github.com/frangaliana/rest-api-thingy#readme",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.15.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }
