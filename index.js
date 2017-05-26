@@ -1,33 +1,15 @@
-'use strict'
+'use strict';
 
-const express = require('express');
-const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const app = require('./app');
+const config = require('./config');
 
-const app = express();
-//Utilizaremos la variable para que sea una variable de entorno o 3000 sino
-const port = process.env.PORT || 3000
+mongoose.connect(config.db, (err, res) => {
+  if (err) return console.log(`Error al conectar a la base de datos: ${err}`);
 
-app.use(bodyParser.urlencoded( {extended:false}));
-app.use(bodyParser.json());
+  console.log('Conexión a la base de datos establecida...');
 
-//Manejo de errores por parte del middleware
-app.use(function(err, req, res, next) {
-  res.status(400);
-	res.end();
+  app.listen(config.port, () => {
+    console.log(`API REST OF THINGY corriendo en http://localhost:${config.port}`);
+  });
 });
-
-//Petición por defecto para mostrar una Home de la API
-app.get('/api', function(req, res){
-	res.status(200);
-	res.send('Bienvenido a la API REST de Thingy');
-})
-
-//Petición para dar error a entrada vacía incorrecta
-app.get('*', function(req, res){
-	res.status(404);
-	res.send('Petición incorrecta');
-})
-
-app.listen(port, () => {
-  console.log(`API REST OF THINGY corriendo en http://localhost:${port}`)
-})
