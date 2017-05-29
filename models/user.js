@@ -11,10 +11,7 @@ const UserSchema = new Schema({
     lowercase: true,
   },
   name: String,
-  password: {
-    type: String,
-    select: false,
-  },
+  password: String,
   userimg: String,
   gender: Boolean,
   birthdate: Date,

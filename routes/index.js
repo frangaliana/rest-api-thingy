@@ -17,9 +17,4 @@ api.delete('/product/:productId', auth, productCtrl.deleteProduct);
 api.post('/signup', userCtrl.signUp);
 api.post('/signin', userCtrl.signIn);
 
-//Ejemplo para probar autentificación
-api.get('/private', auth, (req, res) => {
-  res.status(200).send({ message: 'Tienes acceso' });
-});
-
 module.exports = api;
