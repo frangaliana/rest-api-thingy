@@ -18,9 +18,8 @@ function getProduct(req, res) {
 function getProducts(req, res) {
   Product.find({}, (err, products) => {
     if (err) return res.status(500).send({ message: `Error al realizar la petición ${err}` });
-    if (!products) return res.status(404).send({ message: `No existen productos` });
-
-    res.status(200).send({ products });
+    if (products.length > 0) res.status(200).send({ products });
+    else return res.status(404).send({ message: `No existen productos` });
   });
 }
 
@@ -41,9 +40,9 @@ function saveProduct(req, res) {
   product.salescomment = req.body.salescomment;
 
   product.save((err, productStored) => {
-    if (err) res.status(500).send({ message: `Error al guardar en base de datos: ${err}` });
+    if (err) res.status(500).send({ message: `Error al guardar en base de datos: ${err}` })
+    else res.status(200).send({ product: productStored });
 
-    res.status(200).send({ product: productStored });
   });
 }
 
