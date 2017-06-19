@@ -21,20 +21,42 @@ function signUp(req, res) {
 };
 
 function signIn(req, res) {
-  User.findOne({ email: req.body.email}, (err, user) => {
-    if (err) return res.status(500).send({ message: err });
-    if (!user) return res.status(404).send({ message: 'Usuario no encontrado' });
 
-    bcrypt.compare(req.body.password, user.password, function(err, comparePassword) {
-      if (err) return res.status(500).send({ message: err });
-      if (comparePassword == false) return res.status(403).send({ message: 'Datos incorrectos' });
+  var email = req.body.email;
+  var password = req.body.password;
 
-      res.status(200).send({
-          message: 'Te has logueado correctamente',
-          token: service.createToken(user),
-      });
-    });
-  });
+  //Cuando hagamos signin?type=basic
+  if(req.query.type) {
+    if(req.query.type === 'basic') {
+      //Obtiene el login y la contraseña
+       var auth = new Buffer(req.get('Authorization').substring(6), 'base64').toString('ascii')
+       var split = auth.split(":")
+       email = split[0]
+       password = split[1]
+       console.log('Peticion de login -> ' + email + ':' + password)
+    }
+  }
+       if (email && password) {
+          User.findOne({ email: email}, (err, user) => {  //en vez de login: req.body.email
+            if (err) return res.status(500).send({ message: err });
+            if (!user) return res.status(404).send({ message: 'Usuario no encontrado' });
+
+            bcrypt.compare(password, user.password, function(err, comparePassword) { //en vez de password: req.body.password
+              if (err) return res.status(500).send({ message: err });
+              if (comparePassword == false) return res.status(403).send({ message: 'Datos incorrectos' });
+
+              res.status(200).send({
+                  message: 'Te has logueado correctamente',
+                  token: service.createToken(user),
+              });
+            });
+          });
+      } else {
+        res.status(400);
+		   	//res.header('WWW-Authenticate', 'Basic realm="ADI"')
+		   	res.send('Login incorrecto');
+		   	console.log('Login incorrecto');
+      }
 };
 
 module.exports = {
