@@ -7,19 +7,79 @@ function getProduct(req, res) {
   let productId = req.params.productId;
 
   Product.findById(productId, (err, product) => {
+    res.setHeader('Content-Type', 'application/json');
     if (err) return res.status(500).send({ message: `Error al realizar la petición ${err}` });
-    if (!product) return res.status(404).send({ message: `El producto no existe` });
+    if (!product) return res.status(404).send({ message: `No existe el producto con el id + ${productId}` });
 
     //Al mandar un objeto del mismo nombre clave-valor, se puede reducir así product:product
-    res.status(200).send({ product });
+    var result = {
+      product: product,
+      links: {
+        self: 'localhost:3000/api/product/'+product.id,
+        //¡¡¡CAMBIAR ID POR LA DEL USUARIO!!!
+        user: 'localhost:3000/api/user/'+product.id
+      }
+    }
+    res.status(200).send(result);
   });
 }
 
 function getProducts(req, res) {
-  Product.find({}, (err, products) => {
-    if (err) return res.status(500).send({ message: `Error al realizar la petición ${err}` });
-    if (products.length > 0) res.status(200).send({ products });
-    else return res.status(404).send({ message: `No existen productos` });
+  var limit;
+  if(req.query.limit) {
+    limit = parseInt(req.query.limit)
+    if(isNaN(limit)){
+      return next(new Error())
+    }
+  } else {
+    limit = 3;
+  }
+
+  var query = {};
+  //Para obtener la página anterior a un id
+  if (req.query.before) {
+    query = {"_id" : {$lt: req.query.before}};
+  //Para obtener la página posterior a un id
+  } else if (req.query.after) {
+    query = {"_id": {$gt: req.query.after}};
+  }
+
+  Product.find(query)
+    .limit(limit)
+    .exec((err, products) =>{
+        res.setHeader('Content-Type', 'application/json');
+        if (err) return res.status(500).send({ message: `Error al realizar la petición ${err}` });
+          if(products.length > 0){
+            if(req.query.before){
+              products.reverse();
+            }
+
+            var result = {
+      				data: products,
+      				paging: {
+      					cursors: {
+                  before: products[0].id,
+                  after: products[products.length-1].id
+      					},
+      					previous: 'localhost:3000/api/product?before='+products[0].id,
+      					next: 'localhost:3000/api/product?after='+products[products.length-1].id,
+      				},
+      				links: {
+      			 		self: 'localhost:3000/api/product',
+      			 		users: 'localhost:3000/api/user'
+      				}
+      			}
+          } else {
+            var result = {
+              data: products,
+              links: {
+                self: 'localhost:3000/api/product',
+                users: 'localhost:3000/api/user'
+              }
+            }
+          }
+
+          res.status(200).send(result);
   });
 }
 
@@ -40,8 +100,20 @@ function saveProduct(req, res) {
   product.salescomment = req.body.salescomment;
 
   product.save((err, productStored) => {
-    if (err) res.status(500).send({ message: `Error al guardar en base de datos: ${err}` })
-    else res.status(200).send({ product: productStored });
+    if (err) { res.status(500).send({ message: `Error al guardar en base de datos: ${err}` })
+    } else {
+      res.setHeader('Content-Type', 'application/json');
+      res.header('Location','http://localhost:3000/api/product/'+product.id)
+
+      var result = {
+        product: productStored,
+        links: {
+          self: 'localhost:3000/api/product/'+product.id
+        //  user_products: 'localhost:3000/api/usuarios/'+req.user.id+'/product',
+        }
+      }
+      res.status(201).send(result);
+    }
 
   });
 }
@@ -51,9 +123,10 @@ function updateProduct(req, res)  {
   let update = req.body;
 
   Product.findByIdAndUpdate(productId, update, (err, productUpdated) => {
+    res.setHeader('Content-Type', 'application/json');
     if (err) res.status(500).send({ message: `Error al actualizar el producto: ${err}` });
 
-    res.status(200).send({ product: productUpdated });
+    res.status(204).send({ product: productUpdated });
   });
 }
 
@@ -65,7 +138,7 @@ function deleteProduct(req, res) {
 
     product.remove(err => {
       if (err) res.status(500).send({ message: `Error al buscar el producto: ${err}` });
-      res.status(200).send({ message: `El producto ha sido eliminado` });
+      res.status(204).send({ message: `1El producto ha sido eliminado correctamente` });
     });
   });
 }
