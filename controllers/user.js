@@ -16,7 +16,8 @@ function signUp(req, res) {
   user.save((err) => {
     if (err) res.status(500).send({ message: `Error al registrar el usuario ${err}` });
 
-    return res.status(200).send({
+    return res.status(201).send({
+      message: 'Te has registrado correctamente',
       token: service.createToken(user),
       links: {
         products: 'localhost:3000/api/product',
@@ -167,8 +168,8 @@ function updateUser(req, res) {
               var result = {
                 user: user,
                 links: {
-                  self: 'localhost:3000/api/user/'+userUpdated.id,
-                  user_products: 'localhost:3000/api/user/'+userUpdated.id+'/product'
+                  self: 'localhost:3000/api/user/'+user.id,
+                  user_products: 'localhost:3000/api/user/'+user.id+'/product'
                 }
               }
               res.status(200).send(result);

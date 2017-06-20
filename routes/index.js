@@ -17,7 +17,7 @@ api.get('/user/:userId/product', productCtrl.getProductsUser);
 //Rutas de users
 api.post('/signup', userCtrl.signUp);
 api.post('/signin', userCtrl.signIn);
-api.get('/user', userCtrl.getUsers);
+api.get('/user', auth, userCtrl.getUsers);
 api.get('/user/:userId', userCtrl.getUser);
 api.put('/user/:userId', auth, userCtrl.updateUser);
 
