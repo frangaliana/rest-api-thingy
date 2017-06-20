@@ -28,6 +28,7 @@ Two forms:
   2. JWT
 
 URL Example: http://localhost:3000/api/signin
+
 Body: fields to register are email, name and password
 
 PD: Inside the Authorization header we will add:
@@ -58,6 +59,7 @@ URL Example: http://localhost:3000/api/products/59494c21f03651444481e2eb
 Add a specific product.
 
 URL Example: http://localhost:3000/api/products
+
 Body: fields to add a product(title, price, categoryproduct, description, visits, status, salesrating, salescomment...)
 
 Neccesary: JWT Authorization
@@ -66,6 +68,7 @@ Neccesary: JWT Authorization
 Modify a specific product.
 
 URL Example: http://localhost:3000/api/products/59494c21f03651444481e2eb
+
 Body: fields to modify a product(title, price, categoryproduct, description, status, salesrating, salescomment...)
 
 Neccesary: JWT Authorization
@@ -110,6 +113,7 @@ Neccesary: JWT Authorization
 Modify a specific user information.
 
 URL Example: http://localhost:3000/api/users/59494b61f03651444481e2ea
+
 Body: fields to modify an user(name, password, userimg, birthdate, location...)
 
 Neccesary: JWT Authorization
