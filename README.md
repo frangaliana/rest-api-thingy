@@ -10,7 +10,33 @@ This document provides guidelines and examples for REST API of Thingy, encouragi
 
 ## Request & Response Examples
 
+### API Resources to Register and Login in API REST
+----------------------------------------
+
+  - [POST /api/signup](#post-signup)
+  - [POST /api/signin](#post-signin)
+  
+### POST /signup
+Register inside the REST API
+
+URL Example: http://localhost:3000/api/signup
+
+### POST /signin
+Login inside the REST API.
+Two forms:
+  *Basic Authorization
+  *JWT
+
+URL Example: http://localhost:3000/api/signin
+Body: fields to register are email, name and password
+
+PD: Inside the Authorization header we will add:
+  *Basic (email: password in Base64)
+  *Bearer (JWT generated from the registry)
+
+
 ### API Resources of Products
+----------------------------------------
 
   - [GET /api/products](#get-products)
   - [GET /products/[id]](#get-productsid)
