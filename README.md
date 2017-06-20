@@ -2,7 +2,7 @@
 
 
 * [Guidelines](#guidelines)
-* [Request & Response Examples](#request-response-examples)
+* [Request & Response Examples](#request--response-examples)
 
 ## Guidelines
 
