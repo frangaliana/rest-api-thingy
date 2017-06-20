@@ -24,15 +24,15 @@ URL Example: http://localhost:3000/api/signup
 ### POST /signin
 Login inside the REST API.
 Two forms:
-  *Basic Authorization
-  *JWT
+  1. Basic Authorization
+  2. JWT
 
 URL Example: http://localhost:3000/api/signin
 Body: fields to register are email, name and password
 
 PD: Inside the Authorization header we will add:
-  *Basic (email: password in Base64)
-  *Bearer (JWT generated from the registry)
+  1. Basic (email: password in Base64)
+  2. Bearer (JWT generated from the registry)
 
 
 ### API Resources of Products
@@ -60,16 +60,22 @@ Add a specific product.
 URL Example: http://localhost:3000/api/products
 Body: fields to add a product(title, price, categoryproduct, description, visits, status, salesrating, salescomment...)
 
+Neccesary: JWT Authorization
+
 ### PUT /products/[id]
 Modify a specific product.
 
 URL Example: http://localhost:3000/api/products/59494c21f03651444481e2eb
 Body: fields to modify a product(title, price, categoryproduct, description, status, salesrating, salescomment...)
 
+Neccesary: JWT Authorization
+
 ### DELETE /products/[id]
 Delete a specific product.
 
 URL Example: http://localhost:3000/api/products/59494c21f03651444481e2eb
+
+Neccesary: JWT Authorization
 
 
 
@@ -91,16 +97,22 @@ Gets a specific user.
 
 URL Example: http://localhost:3000/api/users/59494b61f03651444481e2ea
 
+Neccesary: JWT Authorization
+
 ### GET /users/[id]/products
 Gets specifics products user's.
 
 URL Example: http://localhost:3000/api/users/59494b61f03651444481e2ea/products
+
+Neccesary: JWT Authorization
 
 ### PUT /users/[id]
 Modify a specific user information.
 
 URL Example: http://localhost:3000/api/users/59494b61f03651444481e2ea
 Body: fields to modify an user(name, password, userimg, birthdate, location...)
+
+Neccesary: JWT Authorization
 
 
 
