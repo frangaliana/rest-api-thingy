@@ -45,8 +45,10 @@ Delete a specific product.
 
 URL Example: http://localhost:3000/api/products/59494c21f03651444481e2eb
 
-### API Resources of Users
 
+
+### API Resources of Users
+----------------------------------------
   - [GET /api/users](#get-users)
   - [GET /users/[id]](#get-usersid)
   - [GET /users/[id]/products](#get-productsuser)
