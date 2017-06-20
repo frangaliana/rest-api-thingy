@@ -1,0 +1,70 @@
+======================
+= PRÁCTICA - PARTE 1 =
+======================
+
+
+************************************************************************************************************************************
+* Casos de uso (Menos los casos de uso de registro, login y mostrar todos los productos y uno específico el resto de operaciones necesitarán de cabecera de Authorization Bearer => JWT)*
+************************************************************************************************************************************
+-Registro de usuarios (POST /api/signup): 
+	*Para crear una cuenta en la base de datos de la aplicacion.
+
+-Login básico(POST /api/signin?type=basic): 
+	*Inicio de sesión, devuelve un jwt que será necesario para todas las peticiones.
+	 Datos (email y password) en cabecera Authorization (Basic).
+
+-Login mediante JWT (POST /api/login):
+	*Tras el registro de usuario, devolverá un JWT que utilizaremos para iniciar sesión y realizar muchas de las próximas peticiones incluyendo el JWT en cabecera Authorization (Bearer).
+-----------------------------------------------------------------Products-----------
+-Obtener todos los productos (GET /api/products):
+	*Devuelve los datos de todos los productos subidos a la aplicación realizado con paginación de los resultados y cursores para antes y después.
+
+-Obtener un producto específico (GET /api/products/:id):
+	*Devuelve los datos del producto específico dado un id de un producto
+
+-Subir un producto (POST /api/products):
+	*Sube un producto con los campos (title, price, user, categoryproduct, description, visits, status, publicationdate, salesrating, salescomment), autorización necesaria.
+
+-Modificar un producto ( PUT /api/products/:id):
+	*Se podrá cambiar cualquiera de los campos excepto el de publicationdate o user, autorización necesaria.
+
+-Borrar un producto (DELETE /api/products/:id):
+	*Se podrá eliminar el producto, autorización necesaria.
+---------------------------------------------------------------Users-----------------
+-Obtener todos los usuarios(GET /api/users):
+	*Devuelve los datos públicos de todos los usuarios (paginación disponible como anteriormente), autorización necesaria.
+
+-Obtener un usuario por id(GET /api/users/:id): 
+	*Devuelve los datos públicos de un usuario (sin el password), autorización necesaria.
+
+-Modificar un usuario(PUT /api/users/:id): 
+	*Se puede cambiar cualquier campo excepto el email que es único y signupdate, autorización necesaria.
+
+-Obtener los productos de un usuario específico (GET /api/users/id/products):
+	*Se puede obtener todos aquellos productos que tiene un usuario para poder echar un vistazo de aquellos que pudiesen interesar (con paginación disponible como anteriormente), autorización necesaria.
+
+**********************
+*Historias de usuario*
+**********************
+
+-Como usuario registrado quiero subir un nuevo producto--------------------
+---------------------------------------------------------------------------
+
+- Primero realizaríamos el login (Caso de uso: login Basic) con él nos devolvería un JWT que sería el que utilizaríamos para realizar la acción que queremos.
+Ahora podemos subir un producto para ser vendido (caso de uso Crear un producto nuevo). Una vez creado podrán verlo aquellos usuarios que estén logueados en la aplicación, mientras que de la otra forma sólo podrían ver el total de los productos paginados (Caso de uso: get Productos).
+
+-Como usuario a registrar quiero ver los productos de un usuario en concreto-
+----------------------------------------------------------------------------
+
+Primero tendría que registrarme (Caso de uso: registro JWT), loguearme (Caso de uso: login JWT) con él nos devolvería un JWT que sería el que utilizaríamos para realizar dichas opciones, ahora tengo un usuario concreto al que quiero ver, por ello simplemente accediendo a un producto o sabiéndolo previamente podría acceder a todo el catálogo de los productos de dicho usuario (Caso de uso: get productsUser)
+y devuelve los datos del usuario del jwt sin pasar ninguna id).
+
+===========================================================================================================================
+IMPORTANTE: es necesario tener una Base de Datos en MongoDB con el nombre: thingydb
+- Los parámetros de esta están estipulados en el archivo config.js
+- Para realizar las pruebas más de una vez, será necesario al menos ejecutar en MongoDB los siguientes comandos para que no boicoteen la BD:
+	* use thingydb;
+	* db.users.remove({})
+	* db.products.remove({})
+Existe un enlace a GITHUB que te lleva al proyecto de dicha API con su documentación en archivo README.md:
+	* https://github.com/frangaliana/rest-api-thingy

@@ -7,18 +7,18 @@ const auth = require('../middlewares/auth');
 const api = express.Router();
 
 //Rutas de productos
-api.get('/product', productCtrl.getProducts);
-api.get('/product/:productId', productCtrl.getProduct);
-api.post('/product', auth, productCtrl.saveProduct);
-api.put('/product/:productId', auth, productCtrl.updateProduct);
-api.delete('/product/:productId', auth, productCtrl.deleteProduct);
-api.get('/user/:userId/product', productCtrl.getProductsUser);
+api.get('/products', productCtrl.getProducts);
+api.get('/products/:productId', productCtrl.getProduct);
+api.post('/products', auth, productCtrl.saveProduct);
+api.put('/products/:productId', auth, productCtrl.updateProduct);
+api.delete('/products/:productId', auth, productCtrl.deleteProduct);
+api.get('/users/:userId/products', auth, productCtrl.getProductsUser);
 
 //Rutas de users
 api.post('/signup', userCtrl.signUp);
 api.post('/signin', userCtrl.signIn);
-api.get('/user', auth, userCtrl.getUsers);
-api.get('/user/:userId', userCtrl.getUser);
-api.put('/user/:userId', auth, userCtrl.updateUser);
+api.get('/users', auth, userCtrl.getUsers);
+api.get('/users/:userId', auth, userCtrl.getUser);
+api.put('/users/:userId', auth, userCtrl.updateUser);
 
 module.exports = api;

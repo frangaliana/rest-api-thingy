@@ -47,7 +47,7 @@ describe('API REST Test:', function(){
         })
   });
 
-  //Test GET /api/user
+  //Test GET /api/users
   it(' Registro de otro usuario y obtención lista de usuarios', function(done){
     //Al objeto supertest le pasamos la app de Express
    server
@@ -60,7 +60,7 @@ describe('API REST Test:', function(){
           .end(function(){
             server
               //Hacemos una petición HTTP
-              .get('/api/user').set('Authorization', 'Bearer ' + access_token)
+              .get('/api/users').set('Authorization', 'Bearer ' + access_token)
               .expect(200)
               .end(function(err, res) {
                   assert.equal(res.body.data[0].name, 'Francisco Javier');
@@ -71,13 +71,13 @@ describe('API REST Test:', function(){
           });
   });
 
-  //Test GET /api/user/:id
+  //Test GET /api/users/:id
   it(' Obtención de información pública del nuevo usuario', function(done){
 
       //Al objeto supertest le pasamos la app de Express
       server
           //Hacemos una petición HTTP
-          .get('/api/user/'+userId).set('Authorization', 'Bearer ' + access_token)
+          .get('/api/users/'+userId).set('Authorization', 'Bearer ' + access_token)
           .expect(200)
           .end(function(err, res) {
               assert.equal(res.body.user._id, userId);
@@ -86,13 +86,13 @@ describe('API REST Test:', function(){
           })
   });
 
-  //Test PUT /api/user/:id
+  //Test PUT /api/users/:id
   it(' Modificación del nuevo usuario y nombre correcto', function(done){
 
       //Al objeto supertest le pasamos la app de Express
       server
           //Hacemos una petición HTTP
-          .put('/api/user/'+userId).set('Authorization', 'Bearer ' + access_token)
+          .put('/api/users/'+userId).set('Authorization', 'Bearer ' + access_token)
           .send({
             email: 'fjgc92@alu.ua.es',
             name: 'Francisco Javier',
@@ -106,7 +106,7 @@ describe('API REST Test:', function(){
           .end(function() {
               server
                 //Hacemos una petición HTTP
-                .get('/api/user/'+userId).set('Authorization', 'Bearer ' + access_token)
+                .get('/api/users/'+userId).set('Authorization', 'Bearer ' + access_token)
                 .expect(200)
                 .end(function(err, res) {
                     assert.equal('Francisco Javier', res.body.user.name);
@@ -115,12 +115,12 @@ describe('API REST Test:', function(){
           })
   });
 
-  //Test POST /api/product
+  //Test POST /api/products
   it(' Registro de producto', function(done) {
     //Al objeto supertest le pasamos la app de Express
       server
         //Hacemos una petición HTTP
-        .post('/api/product').set('Authorization', 'Bearer ' + access_token)
+        .post('/api/products').set('Authorization', 'Bearer ' + access_token)
         .send({
             title: 'Manos libres',
             price: 300,
@@ -138,12 +138,12 @@ describe('API REST Test:', function(){
         })
   });
 
-  //Test GET /api/product
+  //Test GET /api/products
   it(' Obtención lista de productos', function(done){
     //Al objeto supertest le pasamos la app de Express
       server
       //Hacemos una petición HTTP
-        .get('/api/product').set('Authorization', 'Bearer ' + access_token)
+        .get('/api/products').set('Authorization', 'Bearer ' + access_token)
         .expect(200)
         .end(function(err, res) {
             assert.equal(res.body.data[0].title, 'Manos libres');
@@ -152,13 +152,13 @@ describe('API REST Test:', function(){
         })
   });
 
-  //Test GET /api/product/:id
+  //Test GET /api/products/:id
   it(' Obtención de información pública de un producto', function(done){
 
       //Al objeto supertest le pasamos la app de Express
       server
           //Hacemos una petición HTTP
-          .get('/api/product/'+productId).set('Authorization', 'Bearer ' + access_token)
+          .get('/api/products/'+productId).set('Authorization', 'Bearer ' + access_token)
           .expect(200)
           .end(function(err, res) {
               assert.equal( 'Manos libres', res.body.product.title);
@@ -166,13 +166,13 @@ describe('API REST Test:', function(){
           })
   });
 
-  //Test PUT /api/product/:id
+  //Test PUT /api/products/:id
   it(' Actualizar información pública de un producto', function(done){
 
       //Al objeto supertest le pasamos la app de Express
       server
           //Hacemos una petición HTTP
-          .put('/api/product/'+productId).set('Authorization', 'Bearer ' + access_token)
+          .put('/api/products/'+productId).set('Authorization', 'Bearer ' + access_token)
           .expect(200)
           .send({
             title: 'Manos libres'
@@ -183,13 +183,13 @@ describe('API REST Test:', function(){
           })
   });
 
-  //Test GET /api/user/:userId/product
+  //Test GET /api/users/:userId/products
   it(' Obtención de los productos de un usuario', function(done){
 
       //Al objeto supertest le pasamos la app de Express
       server
           //Hacemos una petición HTTP
-          .get('/api/user/'+userId+'/product').set('Authorization', 'Bearer ' + access_token)
+          .get('/api/users/'+userId+'/products').set('Authorization', 'Bearer ' + access_token)
           .expect(200)
           .end(function(err, res) {
               assert.equal('Manos libres', res.body.data[0].title);
@@ -197,13 +197,13 @@ describe('API REST Test:', function(){
           })
   });
 
-  //Test GET /api/product/:id
+  //Test GET /api/products/:id
   it(' Eliminación de un producto', function(done){
 
       //Al objeto supertest le pasamos la app de Express
       server
           //Hacemos una petición HTTP
-          .delete('/api/product/'+productId).set('Authorization', 'Bearer ' + access_token)
+          .delete('/api/products/'+productId).set('Authorization', 'Bearer ' + access_token)
           .expect(200)
           .end(function(err, res) {
               assert.equal(`Producto eliminado correctamente, id: ${productId}`,res.body.message);

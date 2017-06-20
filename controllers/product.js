@@ -16,8 +16,8 @@ function getProduct(req, res) {
     var result = {
       product: product,
       links: {
-        self: 'localhost:3000/api/product/'+product.id,
-        user: 'localhost:3000/api/user/'+product.user
+        self: 'localhost:3000/api/products/'+product.id,
+        user: 'localhost:3000/api/users/'+product.user
       }
     }
       res.status(200).send(result);
@@ -61,20 +61,20 @@ function getProducts(req, res) {
                   before: products[0].id,
                   after: products[products.length-1].id
       					},
-      					previous: 'localhost:3000/api/product?before='+products[0].id,
-      					next: 'localhost:3000/api/product?after='+products[products.length-1].id,
+      					previous: 'localhost:3000/api/products?before='+products[0].id,
+      					next: 'localhost:3000/api/products?after='+products[products.length-1].id,
       				},
       				links: {
-      			 		self: 'localhost:3000/api/product',
-      			 		users: 'localhost:3000/api/user'
+      			 		self: 'localhost:3000/api/products',
+      			 		users: 'localhost:3000/api/users'
       				}
       			}
           } else {
             var result = {
               data: products,
               links: {
-                self: 'localhost:3000/api/product',
-                users: 'localhost:3000/api/user'
+                self: 'localhost:3000/api/products',
+                users: 'localhost:3000/api/users'
               }
             }
           }
@@ -122,20 +122,22 @@ function getProductsUser(req, res) {
                   before: products[0].id,
                   after: products[products.length-1].id
                 },
-                previous: 'localhost:3000/api/'+userId+'/product?before='+products[0].id,
-                next: 'localhost:3000/api/'+userId+'/product?after='+products[products.length-1].id,
+                previous: 'localhost:3000/api/'+userId+'/products?before='+products[0].id,
+                next: 'localhost:3000/api/'+userId+'/products?after='+products[products.length-1].id,
               },
               links: {
-                self: 'localhost:3000/api/'+userId+'product',
-                users: 'localhost:3000/api/user'
+                self: 'localhost:3000/api/'+userId+'/products',
+                user: 'localhost:3000/api/'+userId,
+                users: 'localhost:3000/api/users'
               }
             }
           } else {
             var result = {
               data: products,
               links: {
-                self: 'localhost:3000/api/product',
-                users: 'localhost:3000/api/user'
+                self: 'localhost:3000/api/products',
+                user: 'localhost:3000/api/'+userId,
+                users: 'localhost:3000/api/users'
               }
             }
           }
@@ -146,7 +148,7 @@ function getProductsUser(req, res) {
 }
 
 function saveProduct(req, res) {
-  console.log('POST /api/product');
+  console.log('POST /api/products');
   console.log(req.body);
 
   let product = new Product();
@@ -165,13 +167,13 @@ function saveProduct(req, res) {
     if (err) { res.status(500).send({ message: `Error al guardar en base de datos: ${err}` })
     } else {
       res.setHeader('Content-Type', 'application/json');
-      res.header('Location','http://localhost:3000/api/product/'+product.id)
+      res.header('Location','http://localhost:3000/api/products/'+product.id)
 
       var result = {
         product: productStored,
         links: {
-          self: 'localhost:3000/api/product/'+product.id,
-          user_products: 'localhost:3000/api/user/'+product.user+'/product'
+          self: 'localhost:3000/api/products/'+product.id,
+          user_products: 'localhost:3000/api/users/'+product.user+'/products'
         }
       }
       res.status(201).send(result);
@@ -193,8 +195,8 @@ function updateProduct(req, res)  {
         var result = {
           product: productUpdated,
           links: {
-            self: 'localhost:3000/api/product/'+productUpdated.id,
-            user_products: 'localhost:3000/api/user/'+productUpdated.user+'/product'
+            self: 'localhost:3000/api/products/'+productUpdated.id,
+            user_products: 'localhost:3000/api/users/'+productUpdated.user+'/products'
           }
         }
         res.status(200).send(result);
@@ -219,8 +221,8 @@ function deleteProduct(req, res) {
           var result = {
             message: `Producto eliminado correctamente, id: ${productId}`,
             links: {
-              user_product: 'localhost:3000/api/user/'+product.user+'/product',
-              products: 'localhost:3000/api/product'
+              user_product: 'localhost:3000/api/users/'+product.user+'/products',
+              products: 'localhost:3000/api/products'
             }
           }
           res.status(200).send(result);

@@ -20,9 +20,9 @@ function signUp(req, res) {
       message: 'Te has registrado correctamente',
       token: service.createToken(user),
       links: {
-        products: 'localhost:3000/api/product',
-        self: 'localhost:3000/api/user/'+user.id,
-        user_products: 'localhost:3000/api/user/'+user.id+'/product'
+        products: 'localhost:3000/api/products',
+        self: 'localhost:3000/api/users/'+user.id,
+        user_products: 'localhost:3000/api/users/'+user.id+'/products'
       }
     });
   });
@@ -57,9 +57,9 @@ function signIn(req, res) {
                   message: 'Te has logueado correctamente',
                   token: service.createToken(user),
                   links: {
-                    products: 'localhost:3000/api/product',
-                    self: 'localhost:3000/api/user/'+user.id,
-                    user_products: 'localhost:3000/api/user/'+user.id+'/product'
+                    products: 'localhost:3000/api/products',
+                    self: 'localhost:3000/api/users/'+user.id,
+                    user_products: 'localhost:3000/api/users/'+user.id+'/products'
                   }
               });
             });
@@ -110,20 +110,20 @@ function getUsers(req, res) {
                   before: users[0].id,
                   after: users[users.length-1].id
                 },
-                previous: 'localhost:3000/api/user?before='+users[0].id,
-                next: 'localhost:3000/api/user?after='+users[users.length-1].id,
+                previous: 'localhost:3000/api/users?before='+users[0].id,
+                next: 'localhost:3000/api/users?after='+users[users.length-1].id,
               },
               links: {
-                self: 'localhost:3000/api/user',
-                products: 'localhost:3000/api/product'
+                self: 'localhost:3000/api/users',
+                products: 'localhost:3000/api/products'
               }
             }
           } else {
             var result = {
               data: users,
               links: {
-                self: 'localhost:3000/api/user',
-                products: 'localhost:3000/api/product'
+                self: 'localhost:3000/api/users',
+                products: 'localhost:3000/api/products'
               }
             }
           }
@@ -144,8 +144,8 @@ function getUser(req, res) {
     var result = {
       user: user,
       links: {
-        self: 'localhost:3000/api/user/'+user.id,
-        products: 'localhost:3000/api/user/'+user.id+'/product'
+        self: 'localhost:3000/api/users/'+user.id,
+        products: 'localhost:3000/api/users/'+user.id+'/products'
       }
     }
       res.status(200).send(result);
@@ -168,8 +168,8 @@ function updateUser(req, res) {
               var result = {
                 user: user,
                 links: {
-                  self: 'localhost:3000/api/user/'+user.id,
-                  user_products: 'localhost:3000/api/user/'+user.id+'/product'
+                  self: 'localhost:3000/api/users/'+user.id,
+                  user_products: 'localhost:3000/api/users/'+user.id+'/products'
                 }
               }
               res.status(200).send(result);
