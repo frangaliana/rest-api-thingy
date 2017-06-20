@@ -16,7 +16,14 @@ function signUp(req, res) {
   user.save((err) => {
     if (err) res.status(500).send({ message: `Error al registrar el usuario ${err}` });
 
-    return res.status(200).send({ token: service.createToken(user) });
+    return res.status(200).send({
+      token: service.createToken(user),
+      links: {
+        products: 'localhost:3000/api/product',
+        self: 'localhost:3000/api/user/'+user.id,
+        user_products: 'localhost:3000/api/user/'+user.id+'/product'
+      }
+    });
   });
 };
 
@@ -48,6 +55,11 @@ function signIn(req, res) {
               res.status(200).send({
                   message: 'Te has logueado correctamente',
                   token: service.createToken(user),
+                  links: {
+                    products: 'localhost:3000/api/product',
+                    self: 'localhost:3000/api/user/'+user.id,
+                    user_products: 'localhost:3000/api/user/'+user.id+'/product'
+                  }
               });
             });
           });
@@ -59,7 +71,123 @@ function signIn(req, res) {
       }
 };
 
+function getUsers(req, res) {
+  var limit;
+  if(req.query.limit) {
+    limit = parseInt(req.query.limit)
+    if(isNaN(limit)){
+      return next(new Error())
+    }
+  } else {
+    limit = 10;
+  }
+
+  var query = {};
+  //Para obtener la página anterior a un id
+  if (req.query.before) {
+    query = {"_id" : {$lt: req.query.before}};
+  //Para obtener la página posterior a un id
+  } else if (req.query.after) {
+    query = {"_id": {$gt: req.query.after}};
+  }
+
+  User.find(query)
+    .select('id name')
+    .limit(limit)
+    .exec((err, users) =>{
+        res.setHeader('Content-Type', 'application/json');
+        if (err) return res.status(500).send({ message: `Error al realizar la petición ${err}` });
+          if(users.length > 0){
+            if(req.query.before){
+              users.reverse();
+            }
+
+            var result = {
+              data: users,
+              paging: {
+                cursors: {
+                  before: users[0].id,
+                  after: users[users.length-1].id
+                },
+                previous: 'localhost:3000/api/user?before='+users[0].id,
+                next: 'localhost:3000/api/user?after='+users[users.length-1].id,
+              },
+              links: {
+                self: 'localhost:3000/api/user',
+                products: 'localhost:3000/api/product'
+              }
+            }
+          } else {
+            var result = {
+              data: users,
+              links: {
+                self: 'localhost:3000/api/user',
+                products: 'localhost:3000/api/product'
+              }
+            }
+          }
+
+          res.status(200).send(result);
+  });
+}
+
+function getUser(req, res) {
+  let userId = req.params.userId;
+
+  User.findById(userId, {id: 1, name: 1}, (err, user) => {
+    res.setHeader('Content-Type', 'application/json');
+    if (err) return res.status(500).send({ message: `Error al realizar la petición ${err}` });
+    if (!user) return res.status(404).send({ message: `No existe el usuario con el id + ${userId}` });
+
+    //Al mandar un objeto del mismo nombre clave-valor, se puede reducir así product:product
+    var result = {
+      user: user,
+      links: {
+        self: 'localhost:3000/api/user/'+user.id,
+        products: 'localhost:3000/api/user/'+user.id+'/product'
+      }
+    }
+      res.status(200).send(result);
+  });
+}
+
+function updateUser(req, res) {
+  let userId = req.params.userId;
+
+  const userUpdated = req.body;
+
+  User.findById(userId, (err, user) => {
+    if (err) res.status(500).send({ message: `Error al actualizar el usuario: ${err}` });
+    else {
+      if(userId == req.user){
+        if(!userUpdated.email){
+          user.save(function (err, updatedUser) {
+            if (err) res.status(500).send({ message: `Error al actualizar el usuario: ${err}` });
+            else {
+              var result = {
+                user: user,
+                links: {
+                  self: 'localhost:3000/api/user/'+userUpdated.id,
+                  user_products: 'localhost:3000/api/user/'+userUpdated.id+'/product'
+                }
+              }
+              res.status(200).send(result);
+            }
+          })
+        } else {
+            res.status(500).send({ message: `Error al actualizar el usuario: email único` });
+        }
+      } else {
+          res.status(400).send({ message: 'Actualización no autorizada: otro usuario'})
+      }
+    }
+  })
+}
+
 module.exports = {
   signUp,
   signIn,
+  getUsers,
+  getUser,
+  updateUser
 };

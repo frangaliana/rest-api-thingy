@@ -19,7 +19,6 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
-  lastLogin: Date,
   location: String,
 });
 

@@ -2,6 +2,7 @@
 
 //Colocar .. para salir de Controller e ir a Models
 const Product = require('../models/product');
+const User = require('../models/user');
 
 function getProduct(req, res) {
   let productId = req.params.productId;
@@ -16,11 +17,10 @@ function getProduct(req, res) {
       product: product,
       links: {
         self: 'localhost:3000/api/product/'+product.id,
-        //¡¡¡CAMBIAR ID POR LA DEL USUARIO!!!
-        user: 'localhost:3000/api/user/'+product.id
+        user: 'localhost:3000/api/user/'+product.user
       }
     }
-    res.status(200).send(result);
+      res.status(200).send(result);
   });
 }
 
@@ -32,7 +32,7 @@ function getProducts(req, res) {
       return next(new Error())
     }
   } else {
-    limit = 3;
+    limit = 10;
   }
 
   var query = {};
@@ -83,6 +83,68 @@ function getProducts(req, res) {
   });
 }
 
+function getProductsUser(req, res) {
+  var userId = req.params.userId;
+
+  var limit;
+  if(req.query.limit) {
+    limit = parseInt(req.query.limit)
+    if(isNaN(limit)){
+      return next(new Error())
+    }
+  } else {
+    limit = 10;
+  }
+
+  var query = {"user": userId};
+  //Para obtener la página anterior a un id
+  if (req.query.before) {
+    query = {"_id" : {$lt: req.query.before}};
+  //Para obtener la página posterior a un id
+  } else if (req.query.after) {
+    query = {"_id": {$gt: req.query.after}};
+  }
+
+  Product.find(query)
+    .limit(limit)
+    .exec((err, products) =>{
+        res.setHeader('Content-Type', 'application/json');
+        if (err) return res.status(500).send({ message: `Error al realizar la petición ${err}` });
+          if(products.length > 0){
+            if(req.query.before){
+              products.reverse();
+            }
+
+            var result = {
+              data: products,
+              paging: {
+                cursors: {
+                  before: products[0].id,
+                  after: products[products.length-1].id
+                },
+                previous: 'localhost:3000/api/'+userId+'/product?before='+products[0].id,
+                next: 'localhost:3000/api/'+userId+'/product?after='+products[products.length-1].id,
+              },
+              links: {
+                self: 'localhost:3000/api/'+userId+'product',
+                users: 'localhost:3000/api/user'
+              }
+            }
+          } else {
+            var result = {
+              data: products,
+              links: {
+                self: 'localhost:3000/api/product',
+                users: 'localhost:3000/api/user'
+              }
+            }
+          }
+
+          res.status(200).send(result);
+  });
+
+}
+
 function saveProduct(req, res) {
   console.log('POST /api/product');
   console.log(req.body);
@@ -90,7 +152,7 @@ function saveProduct(req, res) {
   let product = new Product();
   product.title = req.body.title;
   product.price = req.body.price;
-  product.user = req.body.user;
+  product.user = req.user;
   product.categoryproduct = req.body.categoryproduct;
   product.description = req.body.description;
   product.visits = req.body.visits;
@@ -108,8 +170,8 @@ function saveProduct(req, res) {
       var result = {
         product: productStored,
         links: {
-          self: 'localhost:3000/api/product/'+product.id
-        //  user_products: 'localhost:3000/api/usuarios/'+req.user.id+'/product',
+          self: 'localhost:3000/api/product/'+product.id,
+          user_products: 'localhost:3000/api/user/'+product.user+'/product'
         }
       }
       res.status(201).send(result);
@@ -124,9 +186,22 @@ function updateProduct(req, res)  {
 
   Product.findByIdAndUpdate(productId, update, (err, productUpdated) => {
     res.setHeader('Content-Type', 'application/json');
-    if (err) res.status(500).send({ message: `Error al actualizar el producto: ${err}` });
 
-    res.status(204).send({ product: productUpdated });
+    if(productUpdated.user == req.user){
+      if (err) res.status(500).send({ message: `Error al actualizar el producto: ${err}` });
+      else {
+        var result = {
+          product: productUpdated,
+          links: {
+            self: 'localhost:3000/api/product/'+productUpdated.id,
+            user_products: 'localhost:3000/api/user/'+productUpdated.user+'/product'
+          }
+        }
+        res.status(200).send(result);
+      }
+    } else {
+      res.status(400).send({ message: 'Actualización no autorizada: producto de otro usuario'})
+    }
   });
 }
 
@@ -134,18 +209,33 @@ function deleteProduct(req, res) {
   let productId = req.params.productId;
 
   Product.findById(productId, (err, product) => {
-    if (err) res.status(500).send({ message: `Error al borrar el producto: ${err}` });
+    if(product.user == req.user){
 
-    product.remove(err => {
-      if (err) res.status(500).send({ message: `Error al buscar el producto: ${err}` });
-      res.status(204).send({ message: `1El producto ha sido eliminado correctamente` });
-    });
+      if (err) res.status(500).send({ message: `Error al borrar el producto: ${err}` });
+
+      product.remove(err => {
+        if (err) res.status(500).send({ message: `Error al buscar el producto: ${err}` });
+        else {
+          var result = {
+            message: `Producto eliminado correctamente, id: ${productId}`,
+            links: {
+              user_product: 'localhost:3000/api/user/'+product.user+'/product',
+              products: 'localhost:3000/api/product'
+            }
+          }
+          res.status(200).send(result);
+        }
+      });
+    } else {
+      res.status(400).send({ message: 'Borrado no autorizado: producto de otro usuario'})
+    }
   });
 }
 
 module.exports = {
   getProduct,
   getProducts,
+  getProductsUser,
   saveProduct,
   updateProduct,
   deleteProduct,
