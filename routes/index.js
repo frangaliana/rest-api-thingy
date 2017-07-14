@@ -20,5 +20,6 @@ api.post('/signin', userCtrl.signIn);
 api.get('/users', auth, userCtrl.getUsers);
 api.get('/users/:userId', auth, userCtrl.getUser);
 api.put('/users/:userId', auth, userCtrl.updateUser);
+api.delete('/users/:userId', auth, userCtrl.deleteUser);
 
 module.exports = api;

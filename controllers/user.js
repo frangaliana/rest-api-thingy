@@ -55,6 +55,7 @@ function signIn(req, res) {
 
               res.status(200).send({
                   message: 'Te has logueado correctamente',
+                  user_id: user.id,
                   token: service.createToken(user),
                   links: {
                     products: 'localhost:3000/api/products',
@@ -74,13 +75,18 @@ function signIn(req, res) {
 
 function getUsers(req, res) {
   var limit;
+  var before = undefined,
+      after = undefined,
+      previous = undefined,
+      next = undefined;
+
   if(req.query.limit) {
     limit = parseInt(req.query.limit)
     if(isNaN(limit)){
       return next(new Error())
     }
   } else {
-    limit = 10;
+    limit = 5;
   }
 
   var query = {};
@@ -104,29 +110,37 @@ function getUsers(req, res) {
             }
 
             var result = {
-              data: users,
-              paging: {
-                cursors: {
-                  before: users[0].id,
-                  after: users[users.length-1].id
-                },
-                previous: 'localhost:3000/api/users?before='+users[0].id,
-                next: 'localhost:3000/api/users?after='+users[users.length-1].id,
-              },
-              links: {
-                self: 'localhost:3000/api/users',
-                products: 'localhost:3000/api/products'
-              }
+                  data: users,
+                  paging: {
+                    cursors: {
+                      before: users[0].id,
+                      after: users[users.length-1].id
+                    },
+                    previous: 'localhost:3000/api/users?before='+users[0].id,
+                    next: 'localhost:3000/api/users?after='+users[users.length-1].id,
+                  },
+                  links: {
+                    self: 'localhost:3000/api/users/',
+                    products: 'localhost:3000/api/products'
+                  }
+                }
+            } else {
+                var result = {
+                      data: users,
+                      paging: {
+                      cursors: {
+                        before:undefined,
+                        after:undefined
+                        },
+                        previous: undefined,
+                        next: undefined
+                      },
+                      links: {
+                        self: 'localhost:3000/api/users',
+                        products: 'localhost:3000/api/products'
+                      }
+                    }
             }
-          } else {
-            var result = {
-              data: users,
-              links: {
-                self: 'localhost:3000/api/users',
-                products: 'localhost:3000/api/products'
-              }
-            }
-          }
 
           res.status(200).send(result);
   });
@@ -185,10 +199,32 @@ function updateUser(req, res) {
   })
 }
 
+function deleteUser(req, res) {
+  let userId = req.params.userId;
+
+  User.findById(userId, (err, user) => {
+      if (err) res.status(500).send({ message: `Error al borrar el producto: ${err}` });
+
+      user.remove(err => {
+        if (err) res.status(500).send({ message: `Error al buscar el usuario: ${err}` });
+        else {
+          var result = {
+            message: `Usuario eliminado correctamente, id: ${userId}`,
+            links: {
+              products: 'localhost:3000/api/products'
+            }
+          }
+          res.status(200).send(result);
+        }
+      });
+  });
+}
+
 module.exports = {
   signUp,
   signIn,
   getUsers,
   getUser,
-  updateUser
+  updateUser,
+  deleteUser
 };

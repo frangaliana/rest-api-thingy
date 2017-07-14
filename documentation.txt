@@ -6,10 +6,11 @@
 ************************************************************************************************************************************
 * Casos de uso (Menos los casos de uso de registro, login y mostrar todos los productos y uno específico el resto de operaciones necesitarán de cabecera de Authorization Bearer => JWT)*
 ************************************************************************************************************************************
--Registro de usuarios (POST /api/signup): 
+-Registro de usuarios (POST /api/signup):
 	*Para crear una cuenta en la base de datos de la aplicacion.
+		Con datos en Body: {email, name, password}
 
--Login básico(POST /api/signin?type=basic): 
+-Login básico(POST /api/signin?type=basic):
 	*Inicio de sesión, devuelve un jwt que será necesario para todas las peticiones.
 	 Datos (email y password) en cabecera Authorization (Basic).
 
@@ -34,10 +35,10 @@
 -Obtener todos los usuarios(GET /api/users):
 	*Devuelve los datos públicos de todos los usuarios (paginación disponible como anteriormente), autorización necesaria.
 
--Obtener un usuario por id(GET /api/users/:id): 
+-Obtener un usuario por id(GET /api/users/:id):
 	*Devuelve los datos públicos de un usuario (sin el password), autorización necesaria.
 
--Modificar un usuario(PUT /api/users/:id): 
+-Modificar un usuario(PUT /api/users/:id):
 	*Se puede cambiar cualquier campo excepto el email que es único y signupdate, autorización necesaria.
 
 -Obtener los productos de un usuario específico (GET /api/users/id/products):
@@ -68,3 +69,7 @@ IMPORTANTE: es necesario tener una Base de Datos en MongoDB con el nombre: thing
 	* db.products.remove({})
 Existe un enlace a GITHUB que te lleva al proyecto de dicha API con su documentación en archivo README.md:
 	* https://github.com/frangaliana/rest-api-thingy
+
+======================
+= PRÁCTICA - PARTE 2 =
+======================

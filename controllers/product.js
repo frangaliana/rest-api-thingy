@@ -26,13 +26,14 @@ function getProduct(req, res) {
 
 function getProducts(req, res) {
   var limit;
+
   if(req.query.limit) {
     limit = parseInt(req.query.limit)
     if(isNaN(limit)){
       return next(new Error())
     }
   } else {
-    limit = 10;
+    limit = 5;
   }
 
   var query = {};
@@ -49,37 +50,44 @@ function getProducts(req, res) {
     .exec((err, products) =>{
         res.setHeader('Content-Type', 'application/json');
         if (err) return res.status(500).send({ message: `Error al realizar la petición ${err}` });
-          if(products.length > 0){
-            if(req.query.before){
-              products.reverse();
-            }
-
-            var result = {
-      				data: products,
-      				paging: {
-      					cursors: {
-                  before: products[0].id,
-                  after: products[products.length-1].id
-      					},
-      					previous: 'localhost:3000/api/products?before='+products[0].id,
-      					next: 'localhost:3000/api/products?after='+products[products.length-1].id,
-      				},
-      				links: {
-      			 		self: 'localhost:3000/api/products',
-      			 		users: 'localhost:3000/api/users'
-      				}
-      			}
-          } else {
-            var result = {
-              data: products,
-              links: {
-                self: 'localhost:3000/api/products',
-                users: 'localhost:3000/api/users'
+        if(products.length > 0){
+          if(req.query.before){
+            products.reverse();
+          }
+          var result = {
+                data: products,
+                paging: {
+                  cursors: {
+                    before: products[0].id,
+                    after: products[products.length-1].id
+                  },
+                  previous: 'localhost:3000/api/products?before='+products[0].id,
+                  next: 'localhost:3000/api/products?after='+products[products.length-1].id,
+                },
+                links: {
+                  self: 'localhost:3000/api/products',
+                  users: 'localhost:3000/api/users'
+                }
               }
-            }
+          } else {
+              var result = {
+                    data: products,
+                    paging: {
+                    cursors: {
+                      before:undefined,
+                      after:undefined
+                      },
+                      previous: undefined,
+                      next: undefined
+                    },
+                    links: {
+                      self: 'localhost:3000/api/products',
+                      users: 'localhost:3000/api/users'
+                    }
+                  }
           }
 
-          res.status(200).send(result);
+        res.status(200).send(result);
   });
 }
 
@@ -93,7 +101,7 @@ function getProductsUser(req, res) {
       return next(new Error())
     }
   } else {
-    limit = 10;
+    limit = 5;
   }
 
   var query = {"user": userId};
@@ -114,33 +122,40 @@ function getProductsUser(req, res) {
             if(req.query.before){
               products.reverse();
             }
-
             var result = {
-              data: products,
-              paging: {
-                cursors: {
-                  before: products[0].id,
-                  after: products[products.length-1].id
-                },
-                previous: 'localhost:3000/api/'+userId+'/products?before='+products[0].id,
-                next: 'localhost:3000/api/'+userId+'/products?after='+products[products.length-1].id,
-              },
-              links: {
-                self: 'localhost:3000/api/'+userId+'/products',
-                user: 'localhost:3000/api/'+userId,
-                users: 'localhost:3000/api/users'
-              }
+                  data: products,
+                  paging: {
+                    cursors: {
+                      before: products[0].id,
+                      after: products[products.length-1].id
+                    },
+                    previous: 'localhost:3000/api/users/'+userId+'/products?before='+products[0].id,
+                    next: 'localhost:3000/api/users/'+userId+'/products?after='+products[products.length-1].id,
+                  },
+                  links: {
+                    self: 'localhost:3000/api/users/'+userId+'/products',
+                    user: 'localhost:3000/api/users/'+userId,
+                    users: 'localhost:3000/api/users'
+                  }
+                }
+            } else {
+                var result = {
+                      data: products,
+                      paging: {
+                      cursors: {
+                        before:undefined,
+                        after:undefined
+                        },
+                        previous: undefined,
+                        next: undefined
+                      },
+                      links: {
+                        self: 'localhost:3000/api/products',
+                        user: 'localhost:3000/api/'+userId,
+                        users: 'localhost:3000/api/users'
+                      }
+                    }
             }
-          } else {
-            var result = {
-              data: products,
-              links: {
-                self: 'localhost:3000/api/products',
-                user: 'localhost:3000/api/'+userId,
-                users: 'localhost:3000/api/users'
-              }
-            }
-          }
 
           res.status(200).send(result);
   });

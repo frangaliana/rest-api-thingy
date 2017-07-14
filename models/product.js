@@ -16,9 +16,13 @@ const ProductSchema = Schema({
   user: {type: Schema.ObjectId, ref: 'User'},
   categoryproduct: {
     type: String,
-    enum:['Moda y Accesorios', 'Motor y Accesorios', 'Electrónica', 'Deporte', 'Libros, Música y Películas', 'Electrodomésticos', 'Servicios', 'Muebles y Decoración', 'Otros']
+    enum:['Moda y Accesorios', 'Motor y Accesorios', 'Electrónica', 'Deporte', 'Libros, Música y Películas', 'Electrodomésticos', 'Servicios', 'Muebles y Decoración', 'Otros'],
+    default: 'Electrónica'
   },
-  description: String,
+  description: {
+    type: String,
+    default: 'Objeto para vender'
+  },
   visits: {
     type: Number,
     default: 0
@@ -34,9 +38,13 @@ const ProductSchema = Schema({
   salesrating: {
     type: Number,
     max: max,
-    min: min
+    min: min,
+    default: 1
   },
-  salescomment: String
+  salescomment: {
+    type: String,
+    default: 'Perfecto'
+  }
 })
 
 module.exports = mongoose.model('Product', ProductSchema);
