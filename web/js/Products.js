@@ -198,7 +198,7 @@ var Products = React.createClass({
 	      //Muestra el modal para crear dependiendo del estado
 	      } else if(this.state.crear) {
 	          modal = (
-	               <EditProduct title = {''} creado = {this.createProductSuccess} mensaje = {this.props.mensaje} cerrar = {this.crearCerrar}/>
+	               <EditProduct title = {''} description = {''} price = {0} categoryproduct = {''} creado = {this.createProductSuccess} mensaje = {this.props.mensaje} cerrar = {this.crearCerrar}/>
 	          );
 	      }
 

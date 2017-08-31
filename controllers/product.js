@@ -4,6 +4,8 @@
 const Product = require('../models/product');
 const User = require('../models/user');
 
+
+//Aquel al que se le pase el middleware antes tendrá req.user con el id del user logueado
 function getProduct(req, res) {
   let productId = req.params.productId;
 
@@ -46,8 +48,10 @@ function getProducts(req, res) {
   }
 
   Product.find(query)
+
     .limit(limit)
-    .exec((err, products) =>{
+    .exec((err, products) => {
+      User.populate(products, {path: "user", select: '-password'}, function(err, products) {
         res.setHeader('Content-Type', 'application/json');
         if (err) return res.status(500).send({ message: `Error al realizar la petición ${err}` });
         if(products.length > 0){
@@ -88,6 +92,7 @@ function getProducts(req, res) {
           }
 
         res.status(200).send(result);
+      });
   });
 }
 
@@ -113,6 +118,8 @@ function getProductsUser(req, res) {
     query = {"_id": {$gt: req.query.after}};
   }
 
+  //La llamada populate hará que en la ruta "user" lo popule con los datos del modelo Autor, quedando una respuesta más completa puesto que muestra todo el usuario
+  //Si dentro de populate ponemos: select: '...' indicaremos aquellos que queremos mostrar
   Product.find(query)
     .limit(limit)
     .exec((err, products) =>{

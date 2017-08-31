@@ -52,6 +52,11 @@ var Login = React.createClass({
             }.bind(this)
           });
         },
+
+        handleRegisterClick: function() {
+            this.props.abrir();
+        },
+
         handleUserInput: function(evento) {
           //con esto actualizamos el estado cuando cambia el texto de la vista (vista->estado)
           this.setState({usuario:evento.target.value, validado_usuario: this.getValidationStateUser(evento.target.value)})
@@ -129,8 +134,8 @@ var Login = React.createClass({
                     </ControlLabel>
                     <FormControl.Feedback />
                   </FormGroup>
-
-                  <Button bsStyle="success" disabled={this.getValidation()} onClick={this.handleClick}>Login</Button>
+                    <Button bsStyle="success" disabled={this.getValidation()} onClick={this.handleClick} style={{paddingRight: 30}}>Login</Button>
+                    <Button bsStyle="info" onClick={this.handleRegisterClick}>Register</Button>
                 </form>
             </div>
             </div>

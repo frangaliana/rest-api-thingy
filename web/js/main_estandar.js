@@ -32,7 +32,7 @@ var templateLista = `
 //Plantilla para los detalles de un usuario
 var templateDetalles = `
   <span id="detalles_{{_id}}">
-    Id: {{_id}}, Login: {{email}}
+    Id: {{_id}}, Nombre: {{email}}
   </span>
 `
 
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function(){
       $.ajax
               ({
                 type: "GET",
-                url: 'http://localhost:3000/api/users?limit=5',
+                url: 'http://localhost:3000/api/users?limit=200',
                 headers: {
                   'Content-Type': 'application/json'
                 },

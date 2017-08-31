@@ -9,7 +9,18 @@
 	<body>
 		<div id="app"></div>
 		<script src="js/jquery-1.11.3.min.js"></script>
-   		<script src="js/bundle.js"></script>
+			<!-- Junta todo nuestro JS (dividido en módulos) y lo junta en un sólo archivo .js denominado bundle.js utilizado en package.json -d para depurar en el navegador
+					 cada fichero individualmente, ya que sino sería el único accesible desde bundle y ahí está todo mezclado y transformado por watchify
+				 	 Diferencia de watchify y browserify, en este primero se queda ejecutándose y vuelve a generar el bundle si detecta cambios.
+					 De la siguiente forma: watchify js/main.js -o bundle.js -d
+
+				 	 JSX es una extensión de JavaScript creada por Facebook para el uso con su librería React. Sirve de preprocesador y transforma el código a JavaScript. Pareces escribir HTML
+				 	 pero estás escribiendo JavaScript (hay palabras reservadas en JavaScript y obliga a nombrar algunos atributos de otra forma -> class = className) necesario utilizr libería extra al HTML
+				   aunque es más aconsejable utilizar WebPack, Browserify o Watchify
+
+					 Antes de generar el bundle necesitaremos un paso previo de traducción a ES5 que es la versión que implementan los navegadores por ello: [babelify -presets [es2015 react]]
+				   Todo unido es: watchify js/main.js -o bundle.js -d -t [ babelify -presets [ es2015 react ] ] -->
+			<script src="js/bundle.js"></script>
    		<script src="js/bootstrap.min.js"></script>
 	</body>
 </html>

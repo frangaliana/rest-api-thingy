@@ -73,3 +73,50 @@ Existe un enlace a GITHUB que te lleva al proyecto de dicha API con su documenta
 ======================
 = PRÁCTICA - PARTE 2 =
 ======================
+
+IMPORTANTE: 
+
+** Necesario tener una Base de Datos en MongoDB con el nombre: thingydb
+- Los parámetros de esta están estipulados en el archivo config.js
+
+0. Ejecutar el comando npm install para instalar las librerías pertinentes
+
+1. Cargar la aplicación de la API (el servidor) con: npm start
+
+2. Crear un usuario para poder loguearse:
+Por ejemplo: Petición POST a http://localhost:3000/api/signup
+		- Incluyendo en el body:
+			email: fjgc9@alu.ua.es
+			name: Francisco Javier
+			password: 1234
+
+A partir de ahí
+
+3. Cargar el cliente para mostrar la web:
+	npm run watch (cargará sólo la parte de React)
+	npm run watch_estandar (cargará sólo la parte sin React con plantillas Handlebars)
+
+4. A continuación iniciar sesión y navegar por la web observando las distintas opciones implementadas, (incluyen todas las que pide dicho enunciado)
+
+
+- PARTE OBLIGATORIA							   -
+----------------------------------------------------------------------------
+URL's:
+	1. React -> http://localhost:3000/web
+	2. jQuery+Handlebars -> http://localhost:3000/web/users.html
+
+
+Cliente dividido por React desde el componente principal (App) en:
+- Archivo para el Login con respectiva validación de campos
+
+- Archivo para manejar todas las opciones del directorio de los productos (tabla con productos y sus detalles pinchando encima, y opciones para añadir un producto, editar cada producto e incluso borrarlo con su respectiva actualización del momento, estas opciones se realizan desde un popup que permite editar los datos o crearlos.
+
+- Archivo específico que consta del formulario para crear/editar un producto apoyándonos en el mismo para realizar las 2 opciones como comentaste en las clases, a base de condicionales seleccionamos una u otra opción según convenga por el botón seleccionado por el usuario.
+
+Dentro de todos los componentes y en lo que sería como la página principal de los productos se ayuda de una Barra de Navegación para darse de baja, ir a la página principal y a la de Clientes, esta sin React donde podemos ver los usuarios existentes, abrir sus detalles, así como editar sus nombres puesto que no somos un administrador y no podemos editar contraseñas de otros y borrarlos, en el caso de que borrasemos nuestro usuario saldríamos expulsados a la página de login.
+
+- PARTE OPTATIVA                                                           -
+----------------------------------------------------------------------------
+
+- Realizamos el estilo visual de la web. Usando Bootstrap, hojas de estilo pertinentes y con React para los componentes
+- Realizamos el mostrar los mensajes al usuario cuando se desconecta, cuando crea, edita, borra un producto, cuando intenta acceder a los vendedores sin estar logueado, etc con sus respectivas validaciones para ello no utilizamos ninguna libería de terceros, simplemente React con el API estándar de JS + CSS.

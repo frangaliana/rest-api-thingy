@@ -1,31 +1,52 @@
-
 'use strict';
 
 const mongoose = require('mongoose');
 const User = require('../models/user');
+const Location = require('../models/location')
 const service = require('../services');
 const bcrypt = require('bcrypt-nodejs');
+const moment = require('moment')
 
 function signUp(req, res) {
-  const user = new User({
-    email: req.body.email,
-    name: req.body.name,
-    password: req.body.password,
-  });
 
-  user.save((err) => {
-    if (err) res.status(500).send({ message: `Error al registrar el usuario ${err}` });
+    let idLocation = "599569120e755b9be1442ee1";
 
-    return res.status(201).send({
-      message: 'Te has registrado correctamente',
-      token: service.createToken(user),
-      links: {
-        products: 'localhost:3000/api/products',
-        self: 'localhost:3000/api/users/'+user.id,
-        user_products: 'localhost:3000/api/users/'+user.id+'/products'
-      }
-    });
-  });
+    if(req.body.location != undefined){
+      const location = new Location({
+        type: req.body.location.type,
+        coordinates: req.body.location.coordinates
+      })
+
+     location.save(function(err, result){
+      idLocation = result.id;
+     });
+   }
+
+      const user = new User({
+        email: req.body.email,
+        name: req.body.name,
+        password: req.body.password,
+        gender: req.body.gender,
+        birthdate: moment(req.body.birthdate, 'DD/MM/YYYY'),
+        location: idLocation
+      });
+
+      user.userimg = user.gravatar()
+
+      user.save((err) => {
+        if (err) res.status(500).send({ message: `Error al registrar el usuario ${err}` });
+
+        return res.status(201).send({
+          message: 'Te has registrado correctamente',
+          token: service.createToken(user),
+          user_id: user.id,
+          links: {
+            products: 'localhost:3000/api/products',
+            self: 'localhost:3000/api/users/'+user.id,
+            user_products: 'localhost:3000/api/users/'+user.id+'/products'
+          }
+        });
+      });
 };
 
 function signIn(req, res) {
@@ -99,9 +120,10 @@ function getUsers(req, res) {
   }
 
   User.find(query)
-    .select('id name')
+    .select('-password')
     .limit(limit)
     .exec((err, users) =>{
+      Location.populate(users, {path: "location"}, function(err, users) {
         res.setHeader('Content-Type', 'application/json');
         if (err) return res.status(500).send({ message: `Error al realizar la petición ${err}` });
           if(users.length > 0){
@@ -143,26 +165,29 @@ function getUsers(req, res) {
             }
 
           res.status(200).send(result);
+        });
   });
 }
 
 function getUser(req, res) {
   let userId = req.params.userId;
 
-  User.findById(userId, {id: 1, name: 1}, (err, user) => {
-    res.setHeader('Content-Type', 'application/json');
-    if (err) return res.status(500).send({ message: `Error al realizar la petición ${err}` });
-    if (!user) return res.status(404).send({ message: `No existe el usuario con el id + ${userId}` });
+  User.findById(userId, {password:0}, (err, user) => {
+    Location.populate(user, {path: "location"}, function(err, user) {
+      res.setHeader('Content-Type', 'application/json');
+      if (err) return res.status(500).send({ message: `Error al realizar la petición ${err}` });
+      if (!user) return res.status(404).send({ message: `No existe el usuario con el id + ${userId}` });
 
-    //Al mandar un objeto del mismo nombre clave-valor, se puede reducir así product:product
-    var result = {
-      user: user,
-      links: {
-        self: 'localhost:3000/api/users/'+user.id,
-        products: 'localhost:3000/api/users/'+user.id+'/products'
+      //Al mandar un objeto del mismo nombre clave-valor, se puede reducir así product:product
+      var result = {
+        user: user,
+        links: {
+          self: 'localhost:3000/api/users/'+user.id,
+          products: 'localhost:3000/api/users/'+user.id+'/products'
+        }
       }
-    }
-      res.status(200).send(result);
+        res.status(200).send(result);
+    });
   });
 }
 

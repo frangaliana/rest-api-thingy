@@ -7,29 +7,41 @@ var Button = require('react-bootstrap/lib/Button')
 
 var NavBar = React.createClass({
 	handleClickLogout: function(){
-		localStorage.clear()
-		this.props.logout()
+		localStorage.clear();
+		this.props.logout();
 	},
+
+	handleClickMyProducts: function(){
+		this.props.OnMyProducts();
+	},
+
+	handleClickAllProducts: function(){
+		this.props.OnAllProducts();
+	},
+
 	elementosBarra() {
 		if (this.props.logueado) {
 			return(
 				<Navbar.Collapse>
-      				 <Nav>
-      				 	<NavItem eventKey={1} href="http://localhost:3000/web/users.html">Vendedores</NavItem>
-      				 </Nav>
+      		 <Nav>
+					 	<NavItem eventKey={4} onClick={this.handleClickAllProducts}>Productos</NavItem>
+					 	<NavItem eventKey={5} onClick={this.handleClickMyProducts}>Mis productos</NavItem>
+      		 </Nav>
 					 <Nav pullRight>
 						<NavItem eventKey={1}>Bienvenido {localStorage.getItem('usuario')}</NavItem>
-	       	 			<NavItem eventKey={2} onClick={this.handleClickLogout}>Logout</NavItem>
-	       	 		</Nav>
-	       	 	</Navbar.Collapse>
-       	 	);
+						<NavItem eventKey={3} href="http://localhost:3000/web/users.html">Mi Perfil</NavItem>
+	       	 	<NavItem eventKey={2} onClick={this.handleClickLogout}>Logout</NavItem>
+	       	 </Nav>
+	      </Navbar.Collapse>
+    	);
 		}
 	},
+
 	render: function() {
 		return <Navbar >
 		    <Navbar.Header>
 		      <Navbar.Brand>
-		        <a href="http://localhost:3000/web">Prueba de React+API Express</a>
+		        <a href="http://localhost:3000/web">Thingy</a>
 		      </Navbar.Brand>
 		    </Navbar.Header>
 	    	{this.elementosBarra()}

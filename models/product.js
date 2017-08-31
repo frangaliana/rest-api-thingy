@@ -13,7 +13,10 @@ const ProductSchema = Schema({
     type: Number,
     default: 0
   },
-  user: {type: Schema.ObjectId, ref: 'User'},
+  user: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },
   categoryproduct: {
     type: String,
     enum:['Moda y Accesorios', 'Motor y Accesorios', 'Electrónica', 'Deporte', 'Libros, Música y Películas', 'Electrodomésticos', 'Servicios', 'Muebles y Decoración', 'Otros'],

@@ -1,0 +1,17 @@
+======================
+= PRÁCTICA DE JULIO  =
+======================
+
+Datos:
+-------------------------------------
+Nombre: Francisco Javier Galiana Cano
+DNI: 74385024B
+
+
+
+------------------------------------ INSTRUCCIONES -----------------------------------
+
+Está todo posicionado en el mismo directorio client-thingy, tanto la práctica 1 como la práctica 2, dentro del archivo documentación está la memoria íntegra tanto de la práctica 1 como de la práctica 2, con los comandos a ejecutar, historias de usuario e información más detallada. Parte Servidor + Parte Cliente.
+
+Un saludo,
+Fran.

@@ -81,7 +81,7 @@ var EditProduct = React.createClass({
 	              'Content-Type': 'application/json'
 	            },
 	            dataType: "json",
-                data: '{"title":"'+this.state.title+'","description":"'+this.state.description+'","price":'+this.state.price+',"categoryproduct":"'+this.state.category+'"}',
+              data: '{"title":"'+this.state.title+'","description":"'+this.state.description+'","price":'+this.state.price+',"categoryproduct":"'+this.state.categoryproduct+'"}',
 	            beforeSend: function (xhr) {
 	              xhr.setRequestHeader ("Authorization", "Bearer " + localStorage.getItem('token'));
 	            },
@@ -174,7 +174,7 @@ var EditProduct = React.createClass({
                 <ControlLabel>Categoría</ControlLabel>
                 <InputGroup>
                   <FormControl componentClass="select" placeholder="Elige la categoría del producto" onChange={this.handleCategorySelect} id="categoryproduct">
-                    <option value=''>Elige la categoría del producto...</option>
+                    <option value=''>Selecciona la categoría</option>
                     <option value='Electrónica'>Electrónica</option>
                     <option value='Moda y accesorios'>Moda y accesorios</option>
                     <option value='Motor y accesorios'>Motor y accesorios</option>
