@@ -3,6 +3,7 @@
 //Colocar .. para salir de Controller e ir a Models
 const Product = require('../models/product');
 const User = require('../models/user');
+const Location = require('../models/location');
 
 
 //Aquel al que se le pase el middleware antes tendrá req.user con el id del user logueado
@@ -10,19 +11,21 @@ function getProduct(req, res) {
   let productId = req.params.productId;
 
   Product.findById(productId, (err, product) => {
-    res.setHeader('Content-Type', 'application/json');
-    if (err) return res.status(500).send({ message: `Error al realizar la petición ${err}` });
-    if (!product) return res.status(404).send({ message: `No existe el producto con el id + ${productId}` });
+    User.populate(product, {path: "user", select: '-password'}, function(err, product) {
+      res.setHeader('Content-Type', 'application/json');
+      if (err) return res.status(500).send({ message: `Error al realizar la petición ${err}` });
+      if (!product) return res.status(404).send({ message: `No existe el producto con el id + ${productId}` });
 
-    //Al mandar un objeto del mismo nombre clave-valor, se puede reducir así product:product
-    var result = {
-      product: product,
-      links: {
-        self: 'localhost:3000/api/products/'+product.id,
-        user: 'localhost:3000/api/users/'+product.user
+      //Al mandar un objeto del mismo nombre clave-valor, se puede reducir así product:product
+      var result = {
+        product: product,
+        links: {
+          self: 'localhost:3000/api/products/'+product.id,
+          user: 'localhost:3000/api/users/'+product.user.id
+        }
       }
-    }
-      res.status(200).send(result);
+        res.status(200).send(result);
+      });
   });
 }
 
@@ -96,6 +99,79 @@ function getProducts(req, res) {
   });
 }
 
+//FALTA CREARLO BIEN
+function getNearbyProducts(req, res) {
+  let resultFinal = [];
+  var limit;
+  let userId = req.user;
+
+  User.findById(userId, {password:0}, (err, user) => {
+    Location.populate(user, {path: "location"}, function(err, result){
+      Location.geoNear(
+        {type:'Point', coordinates: [parseFloat(result.location.coordinates[0]),parseFloat(result.location.coordinates[1])]},
+        {maxDistance:100000, spherical: true}
+      ).then(function(locations){
+
+        for(var i = locations.length - 1; i >= 0; i--){
+          var locationId = locations[i].obj.id;
+
+          User.find({"location": locationId})
+           .exec((err, result) =>{
+             if(result.length > 0){
+
+               for(var j = result.length - 1; j >= 0; j--){
+                  //Control para no sacar resultados de tu propio id
+                   var userId = result[j].id;
+
+                 Product.find(userId, (err,products) =>{
+                   if(products.length > 0){
+
+                     resultFinal = {
+                           data: products,
+                           paging: {
+                             cursors: {
+                               before: products[0].id,
+                               after: products[products.length-1].id
+                             },
+                             previous: 'localhost:3000/api/products?before='+products[0].id,
+                             next: 'localhost:3000/api/products?after='+products[products.length-1].id,
+                           },
+                           links: {
+                             self: 'localhost:3000/api/products',
+                             users: 'localhost:3000/api/users'
+                           }
+                         }
+                  } else {
+                    resultFinal = {
+                          data: products,
+                          paging: {
+                          cursors: {
+                            before:undefined,
+                            after:undefined
+                            },
+                            previous: undefined,
+                            next: undefined
+                          },
+                          links: {
+                            self: 'localhost:3000/api/products',
+                            users: 'localhost:3000/api/users'
+                          }
+                        }
+                  }
+                  res.setHeader('Content-Type', 'application/json');
+                  res.status(200).send(resultFinal);
+
+                 })
+               }
+             }
+          })
+        }
+      })
+    })
+  })
+
+}
+
 function getProductsUser(req, res) {
   var userId = req.params.userId;
 
@@ -166,7 +242,6 @@ function getProductsUser(req, res) {
 
           res.status(200).send(result);
   });
-
 }
 
 function saveProduct(req, res) {
@@ -260,6 +335,7 @@ module.exports = {
   getProduct,
   getProducts,
   getProductsUser,
+  getNearbyProducts,
   saveProduct,
   updateProduct,
   deleteProduct,

@@ -3,13 +3,16 @@ var NavBar = require('./NavBar')
 var Login = require('./Login')
 var Register = require('./Register')
 var Modal = require('./Modal')
+var MyProducts = require('./MyProducts')
 var Products = require('./Products')
+var NearbyProducts = require('./NearbyProducts')
 
 var App = React.createClass({
 	getInitialState: function() {
         return {
             logueado: (localStorage.getItem('token') != undefined),
 						myProducts: false,
+						nearbyProducts: false,
 						allProducts: true,
 						registered: false,
             mensaje: '',
@@ -24,10 +27,13 @@ var App = React.createClass({
       this.setState({logueado: false, mensaje: 'Has cerrado la sesión'});
    },
 	 OnMyProducts() {
-		 this.setState({myProducts: true, allProducts: false})
+		 this.setState({myProducts: true, allProducts: false, nearbyProducts: false})
 	 },
 	 OnAllProducts() {
-		 this.setState({allProducts: true, myProducts: false})
+		 this.setState({allProducts: true, myProducts: false, nearbyProducts: false})
+	 },
+	 OnNearbyProducts() {
+		 this.setState({nearbyProducts: true, myProducts: false, allProducts: false})
 	 },
    setMensaje(m) {
    	  this.setState({mensaje: m});
@@ -57,21 +63,28 @@ var App = React.createClass({
 		 let registerModal;
 
 		 //Si el usuario está logueado muestran los productos
-	   	if (this.state.logueado && this.state.myProducts && !this.state.allProducts) {
+	   	if (this.state.logueado && this.state.myProducts && !this.state.allProducts && !this.state.nearbyProducts) {
   			container = (
   				<div style={{paddingLeft:100, paddingRight:100}}>
             <h2>Mis Productos</h2>
-  				  <Products limit="5" mensaje = {this.setMensaje} data = {this.state.data} setData = {this.setData}/>
+  				  <MyProducts limit="5" mensaje = {this.setMensaje} data = {this.state.data} setData = {this.setData}/>
   				</div>
   			);
       //Si no está logueado muestra el formulario de login
-		} else if(this.state.logueado && this.state.allProducts && !this.state.myProducts) {
+		} else if(this.state.logueado && this.state.allProducts && !this.state.myProducts && !this.state.nearbyProducts) {
 				container = (
 					<div style={{paddingLeft:100, paddingRight:100}}>
 						<h2>Productos</h2>
 						<Products limit="5" mensaje = {this.setMensaje} data = {this.state.data} setData = {this.setData}/>
 					</div>
 				);
+			} else if(this.state.logueado && this.state.nearbyProducts && !this.state.allProducts && !this.state.myProducts) {
+					container = (
+						<div style={{paddingLeft:100, paddingRight:100}}>
+							<h2>Productos cercanos a tu zona</h2>
+							<NearbyProducts limit="20" mensaje = {this.setMensaje} data = {this.state.data} setData = {this.setData}/>
+						</div>
+					);
 			} else {
 	   		container = (
 	   			<div className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
@@ -83,7 +96,7 @@ var App = React.createClass({
 			//Si se pulsa el botón de registro
 			if (this.state.registered) {
 				registerModal = (
-					<Register login = {this.login} email= '' name= '' password='' gender='' birthdate='' location='' terms='' mensaje = {this.setMensaje} creado = {this.createUserSuccess} cerrar = {this.registerCerrar} />
+					<Register login = {this.login} email= '' name= '' password= '' gender={null} birthdate='' location='' terms= {false} mensaje = {this.setMensaje} creado = {this.createUserSuccess} cerrar = {this.registerCerrar} />
 				);
 			}
       // Si hay un mensaje pendiente muestra un modal con el mensaje

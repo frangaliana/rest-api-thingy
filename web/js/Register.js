@@ -17,10 +17,6 @@ var Register = React.createClass({
       validado_name: null,
       password: this.props.password,
       validado_password: null,
-      /*
-      userimg: this.props.userimg,
-      validado_userimg: null,
-      */
       gender: this.props.gender,
       validado_gender: null,
       birthdate: this.props.birthdate,
@@ -65,7 +61,7 @@ var Register = React.createClass({
   },
 
   handleTermsSelect: function(evento){
-    this.setState({terms: evento.target.value, validado_terms: this.getValidationStateGender(evento.target.value)})
+    this.setState({terms: evento.target.value , validado_terms: this.getValidationStateTerms(evento.target.value)})
   },
 
   handleBirthadateSelect: function(evento, formattedValue){
@@ -184,22 +180,20 @@ var Register = React.createClass({
   },
 
   getValidationStateTerms(terms) {
-    if (terms != null) {
-          return 'success';
+    if (terms) {
+      return 'success';
     }
     else return 'error';
   },
 
   getValidation(){
-    return (this.state.validado_name === 'error' || this.state.validado_name === null) && (this.state.validado_password === 'error' || this.state.validado_password === null) && (this.state.validado_gender === 'error' || this.state.validado_gender === null)
-        && (this.state.validado_birthdate === 'error' || this.state.validado_birthdate === null) && (this.state.validado_location === 'error' || this.state.validado_location === null)
-        && (this.state.validado_terms === 'error' || this.state.validado_terms === null);
+    return (this.state.validado_name === 'error' || this.state.validado_name === null) && (this.state.validado_password === 'error' || this.state.validado_password === null) && (this.state.validado_gender === 'error' || this.state.validado_gender === null) && (this.state.validado_birthdate === 'error' || this.state.validado_birthdate === null) && (this.state.validado_location === 'error' || this.state.validado_location === null) && (this.state.validado_terms === 'error' || this.state.validado_terms === null);
   },
 
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        console.log(`Admin, sus coordenadas son: ${position.coords.latitude}, ${position.coords.longitude}`);
+        console.log(`Amigo, tus coordenadas son: ${position.coords.latitude}, ${position.coords.longitude}`);
         this.setState({location: {type: "Point", coordinates: [position.coords.latitude, position.coords.longitude]}})
         //this.setState({location: "599569120e755b9be1442ee1"})
       },
@@ -287,15 +281,15 @@ var Register = React.createClass({
                 <FormControl.Feedback />
               </FormGroup>
 
-            <FormGroup validationState = {this.state.validado_terms}>
-              <InputGroup>
-                <Checkbox value={true} onChange={this.handleTermsSelect} id="terms">He leído las condiciones y acepto los términos de uso </Checkbox>
-              </InputGroup>
-              <ControlLabel>
-                { this.state.validado_terms == 'error' ? 'Debes aceptar los términos para poder continuar' : ''}
-              </ControlLabel>
-              <FormControl.Feedback />
-            </FormGroup>
+              <FormGroup validationState = {this.state.validado_terms}>
+                <InputGroup>
+                  <Checkbox name="terms" value={!this.props.terms} onChange={this.handleTermsSelect}>He leído las condiciones y acepto los términos de uso </Checkbox>
+                </InputGroup>
+                <ControlLabel>
+                  { this.state.validado_terms == 'error' ? 'Debes aceptar los términos para poder continuar' : ''}
+                </ControlLabel>
+                <FormControl.Feedback />
+              </FormGroup>
 
             </Modal.Body>
 

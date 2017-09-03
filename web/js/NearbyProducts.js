@@ -4,7 +4,7 @@ var Button = require('react-bootstrap/lib/Button')
 var Table = require('react-bootstrap/lib/Table')
 var ShowProduct = require('./ShowProduct')
 
-var Products = React.createClass({
+var NearbyProducts = React.createClass({
 	getInitialState: function() {
         return {
             after: null,                      //corresponde a la siguiente id a obtener
@@ -15,7 +15,7 @@ var Products = React.createClass({
         }
     },
     actualizarData: function(direccion) {
-      var url_ajax = "http://localhost:3000/api/products";
+      var url_ajax = "http://localhost:3000/api/nearbys";
 
 			//Si se ha apretado en el boton siguiente y existe una id siguiente a obtener
       if(direccion === 'after' && this.state.after != null) {
@@ -108,7 +108,7 @@ var Products = React.createClass({
 
 			return <div className="table-responsive">
 	          {modal}
-						<Table striped condensed>
+	          <Table striped condensed>
 	            <thead>
 	              <tr>
 	                <th>Producto</th>
@@ -136,4 +136,4 @@ var Products = React.createClass({
 			 </div>
 		}
 	})
-	module.exports = Products
+	module.exports = NearbyProducts

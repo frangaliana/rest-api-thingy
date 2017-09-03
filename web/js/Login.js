@@ -1,6 +1,7 @@
 var React = require('react')
 var Button = require('react-bootstrap/lib/Button')
 var FormGroup = require('react-bootstrap/lib/FormGroup')
+var ButtonGroup = require('react-bootstrap/lib/ButtonGroup')
 var FormControl = require('react-bootstrap/lib/FormControl')
 var ControlLabel = require('react-bootstrap/lib/ControlLabel')
 var InputGroup = require('react-bootstrap/lib/InputGroup')
@@ -134,8 +135,11 @@ var Login = React.createClass({
                     </ControlLabel>
                     <FormControl.Feedback />
                   </FormGroup>
+                  <ButtonGroup vertical block>
                     <Button bsStyle="success" disabled={this.getValidation()} onClick={this.handleClick} style={{paddingRight: 30}}>Login</Button>
+                    <br/>
                     <Button bsStyle="info" onClick={this.handleRegisterClick}>Register</Button>
+                  </ButtonGroup>
                 </form>
             </div>
             </div>

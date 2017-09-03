@@ -9,8 +9,8 @@ const crypto = require('crypto');
 const UserSchema = new Schema({
   email: {
     type: String,
-    unique: true,
     lowercase: true,
+    //Añadir campo unique: true para que sólo se pueda registrar un email
   },
   name: String,
   password: String,

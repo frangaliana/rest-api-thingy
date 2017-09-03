@@ -9,7 +9,7 @@ const moment = require('moment')
 
 function signUp(req, res) {
 
-    let idLocation = "599569120e755b9be1442ee1";
+    let idLocation = "59a9a4011bd0197083c9e201";
 
     if(req.body.location != undefined){
       const location = new Location({

@@ -7,12 +7,15 @@ const auth = require('../middlewares/auth');
 const api = express.Router();
 
 //Rutas de productos
-api.get('/products', productCtrl.getProducts);
+api.get('/products', auth, productCtrl.getProducts);
 api.get('/products/:productId', productCtrl.getProduct);
 api.post('/products', auth, productCtrl.saveProduct);
 api.put('/products/:productId', auth, productCtrl.updateProduct);
 api.delete('/products/:productId', auth, productCtrl.deleteProduct);
 api.get('/users/:userId/products', auth, productCtrl.getProductsUser);
+
+//Rutas de productos cercanos
+api.get('/nearbys', auth, productCtrl.getNearbyProducts)
 
 //Rutas de users
 api.post('/signup', userCtrl.signUp);

@@ -53,7 +53,7 @@ var EditProduct = React.createClass({
   		$.ajax
 	          ({
 	            type: "POST",
-	            url: 'http://localhost:3000/api/products/',
+	            url: 'http://localhost:3000/api/products',
 	            headers: {
 	              'Content-Type': 'application/json'
 	            },
@@ -204,12 +204,8 @@ var EditProduct = React.createClass({
               </FormGroup>
           </Modal.Body>
           <Modal.Footer>
-            <Button id="button_editar" bsStyle="success" disabled={this.getValidation()} onClick={this.handleClick}>
-                {this.props.title === '' ? 'Crear' : 'Editar'}
-            </Button>
-            <Button bsStyle="default" onClick={this.close}>
-               Cerrar
-            </Button>
+            <Button id="button_editar" bsStyle="success" disabled={this.getValidation()} onClick={this.handleClick}>{this.props.title === '' ? 'Crear' : 'Editar'}</Button>
+            <Button bsStyle="default" onClick={this.close}>Cerrar</Button>
           </Modal.Footer>
          </form>
         </Modal>
