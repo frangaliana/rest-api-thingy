@@ -4,6 +4,8 @@
 * [Guidelines](#guidelines)
 * [Request & Response Examples](#request--response-examples)
 
+--> Anyadido Cliente Web React + Memoria (+Branding y Marketing)
+
 ## Guidelines
 
 This document provides guidelines and examples for REST API of Thingy, encouraging consistency, maintainability, and best practices across application. Thingy API aim to balance a truly RESTful API interface with a positive developer experience (DX).
