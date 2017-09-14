@@ -21,7 +21,9 @@ var Register = React.createClass({
       validado_gender: null,
       birthdate: this.props.birthdate,
       validado_birthdate: null,
-      location: this.props.location,
+      type: "",
+      latitude: null,
+      longitude: null,
       validado_location: null,
       terms: this.props.terms,
       validado_terms: null
@@ -84,7 +86,7 @@ var Register = React.createClass({
                 'Content-Type': 'application/json'
               },
               dataType: "json",
-              data: '{"email":"'+this.state.email+'","name":"'+this.state.name+'","password":"'+this.state.password+'","gender":"'+this.state.gender+'","birthdate":"'+this.state.birthdate+'","location":"'+this.state.location+'"}',
+              data: '{"email":"'+this.state.email+'","name":"'+this.state.name+'","password":"'+this.state.password+'","gender":"'+this.state.gender+'","birthdate":"'+this.state.birthdate+'","type":"'+this.state.type+'","latitude":"'+this.state.latitude+'","longitude":"'+this.state.longitude+'"}',
               success: function (res){
                 localStorage.setItem('usuario', this.state.email);
                 localStorage.setItem('id', res.user_id);
@@ -107,7 +109,7 @@ var Register = React.createClass({
                 'Content-Type': 'application/json'
               },
               dataType: "json",
-              data: '{"name":"'+this.state.name+'","password":"'+this.state.password+'","gender":"'+this.state.gender+'","birthdate":"'+this.state.birthdate+'","location":"'+this.state.location+'"}',
+              data: '{"name":"'+this.state.name+'","password":"'+this.state.password+'","gender":"'+this.state.gender+'","birthdate":"'+this.state.birthdate+'","type":"'+this.state.type+'","coordinates":"'+this.state.coordinates+'"}',
               beforeSend: function (xhr) {
                 xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('token'));
               },
@@ -193,13 +195,15 @@ var Register = React.createClass({
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        console.log(`Amigo, tus coordenadas son: ${position.coords.latitude}, ${position.coords.longitude}`);
-        this.setState({location: {type: "Point", coordinates: [position.coords.latitude, position.coords.longitude]}})
-        //this.setState({location: "599569120e755b9be1442ee1"})
+        console.log(`¡Hola usuario! Tus coordenadas son: ${position.coords.latitude}, ${position.coords.longitude}`);
+        this.setState({type: "Point"})
+        this.setState({latitude: position.coords.latitude})
+        this.setState({longitude: position.coords.longitude})
+        //this.setState({location: "59ba6c9efe3b5d200a75ac0f"})
       },
       (error) => {
         alert(error.message)
-        //this.setState({location: "599569120e755b9be1442ee1"})
+        //this.setState({location: "59ba6c9efe3b5d200a75ac0f"})
       },
       {enableHighAccuracy: true, timeout:20000, maximumAge:1000}
     );

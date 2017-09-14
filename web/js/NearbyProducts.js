@@ -99,7 +99,7 @@ var NearbyProducts = React.createClass({
 	        for(var i = this.props.data.length - 1; i >= 0; i--) {
 	            if(this.props.data[i]._id === this.state.showID) {
 								modal = (
-	                <ShowProduct id = {this.state.showID} mensaje = {this.props.mensaje} cerrar = {this.showCerrar}/>
+	                <ShowProduct id = {this.state.showID} mensaje = {this.props.mensaje} cerrar = {this.showCerrar} showButton = {true}/>
 	              );
 	              break;
 	            }

@@ -102,7 +102,7 @@ function getProducts(req, res) {
 //FALTA CREARLO BIEN
 function getNearbyProducts(req, res) {
   let userId = req.user;
-  let point;
+  /*let point;
 
   var geoOptions = {
     spherical: true,
@@ -205,20 +205,21 @@ function getNearbyProducts(req, res) {
           }
         })
 
-  })
+  })*/
 
-  /*var limit;
+  var limit;
   let resultFinal = []
 
   User.findById(userId, {password:0}, (err, user) => {
     Location.populate(user, {path: "location"}, function(err, result){
       Location.geoNear(
         {type:'Point', coordinates: [parseFloat(result.location.coordinates[0]),parseFloat(result.location.coordinates[1])]},
-        {maxDistance:10, spherical: true}
+        {maxDistance:1, spherical: true}
       ).then(function(locations){
-
         for(var i = locations.length - 1; i >= 0; i--){
-          var locationId = locations[i].obj.id;
+          if(result.location._id != locations[i].obj.id){
+            var locationId = locations[i].obj.id;
+          }
 
           User.find({"location": locationId})
            .exec((err, result) =>{
@@ -263,9 +264,14 @@ function getNearbyProducts(req, res) {
                           }
                         }
                   }
-                  console.log('sending response!')
-                  res.setHeader('Content-Type', 'application/json');
-                  res.status(200).send(resultFinal);
+
+                for(var r = 0 ; r < 1 ; r++){
+                    console.log(`sending response!`)
+                    console.log(resultFinal)
+                    console.log('-----------------')
+                    res.setHeader('Content-Type', 'application/json');
+                    res.status(200).send(resultFinal);
+                  }
 
                  })
                }
@@ -274,7 +280,7 @@ function getNearbyProducts(req, res) {
         }
       })
     })
-  })*/
+  })
 
 }
 

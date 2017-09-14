@@ -9,44 +9,48 @@ const moment = require('moment')
 
 function signUp(req, res) {
 
-    let idLocation = "59a9a4011bd0197083c9e201";
+    var latitude = 38.262609;
+    var longitude = -0.720785;
 
-    if(req.body.location != undefined){
+    if(req.body.latitude !== undefined || req.body.longitude !== undefined){
+      latitude = req.body.latitude
+      longitude = req.body.longitude
+    }
+
       const location = new Location({
-        type: req.body.location.type,
-        coordinates: req.body.location.coordinates
+        type: req.body.type,
+        coordinates: [latitude,longitude]
       })
 
-     location.save(function(err, result){
-      idLocation = result.id;
-     });
-   }
+     var locationSave = location.save();
 
-      const user = new User({
-        email: req.body.email,
-        name: req.body.name,
-        password: req.body.password,
-        gender: req.body.gender,
-        birthdate: moment(req.body.birthdate, 'DD/MM/YYYY'),
-        location: idLocation
-      });
-
-      user.userimg = user.gravatar()
-
-      user.save((err) => {
-        if (err) res.status(500).send({ message: `Error al registrar el usuario ${err}` });
-
-        return res.status(201).send({
-          message: 'Te has registrado correctamente',
-          token: service.createToken(user),
-          user_id: user.id,
-          links: {
-            products: 'localhost:3000/api/products',
-            self: 'localhost:3000/api/users/'+user.id,
-            user_products: 'localhost:3000/api/users/'+user.id+'/products'
-          }
+      locationSave.then( function(result) {
+        const user = new User({
+          email: req.body.email,
+          name: req.body.name,
+          password: req.body.password,
+          gender: req.body.gender,
+          birthdate: moment(req.body.birthdate, 'DD/MM/YYYY'),
+          location: result.id
         });
-      });
+
+        user.userimg = user.gravatar()
+
+        user.save((err) => {
+          if (err) res.status(500).send({ message: `Error al registrar el usuario ${err}` });
+
+          return res.status(201).send({
+            message: 'Te has registrado correctamente',
+            token: service.createToken(user),
+            user_id: user.id,
+            links: {
+              products: 'localhost:3000/api/products',
+              self: 'localhost:3000/api/users/'+user.id,
+              user_products: 'localhost:3000/api/users/'+user.id+'/products'
+            }
+          });
+        });
+    })
 };
 
 function signIn(req, res) {

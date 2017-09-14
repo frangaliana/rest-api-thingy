@@ -116,7 +116,7 @@ var App = React.createClass({
 			//Si se pulsa el botón de registro
 			if (this.state.registered) {
 				registerModal = (
-					<Register login = {this.login} email= '' name= '' password= '' gender={null} birthdate='' location='' terms= {false} mensaje = {this.setMensaje} creado = {this.createUserSuccess} cerrar = {this.registerCerrar} />
+					<Register login = {this.login} email= '' name= '' password= '' gender={null} birthdate='' terms= {false} mensaje = {this.setMensaje} creado = {this.createUserSuccess} cerrar = {this.registerCerrar} />
 				);
 			}
       // Si hay un mensaje pendiente muestra un modal con el mensaje

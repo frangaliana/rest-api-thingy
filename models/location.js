@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+//default: [38.262609, -0.720785]
 
 const LocationSchema = new Schema({
   type: {
@@ -11,7 +12,6 @@ const LocationSchema = new Schema({
   coordinates: {
     type: [Number],
     index: "2dsphere",
-    default: [38.280153, -0.712901]
   }
 })
 
