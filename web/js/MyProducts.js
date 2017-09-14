@@ -86,7 +86,7 @@ var MyProducts = React.createClass({
 							xhr.setRequestHeader ("Authorization", "Bearer " + localStorage.getItem('token'));
 						},
 						success: function (res){
-							//Se borra el entrenamiento de data
+							//Se borra el producto de data
 							var list = this.props.data;
 							for(var i = list.length - 1; i >= 0; i--) {
 								if(list[i]._id === id) {

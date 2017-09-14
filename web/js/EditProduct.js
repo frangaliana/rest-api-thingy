@@ -66,8 +66,9 @@ var EditProduct = React.createClass({
 	            	this.props.creado();
 	            	this.props.mensaje('Producto creado con éxito');
 	            }.bind(this),
-	            error: function (respuesta){
-	              this.props.mensaje('Ha ocurrido un error');
+	            error: function (res){
+                console.log(res.data)
+                this.props.mensaje('Ha ocurrido un error');
 	            }.bind(this)
 	          });
 
@@ -123,7 +124,7 @@ var EditProduct = React.createClass({
   getValidationStateCategory(categoryproduct) {
       if (categoryproduct === 'Electrónica' ||
           categoryproduct === 'Moda y accesorios' ||
-          categoryproduct === 'Motor y accesorios' ||
+          categoryproduct === 'Motor' ||
           categoryproduct === 'Deporte' ||
           categoryproduct === 'Libros, Música y Películas' ||
           categoryproduct === 'Electrodomésticos' ||
@@ -177,7 +178,7 @@ var EditProduct = React.createClass({
                     <option value=''>Selecciona la categoría</option>
                     <option value='Electrónica'>Electrónica</option>
                     <option value='Moda y accesorios'>Moda y accesorios</option>
-                    <option value='Motor y accesorios'>Motor y accesorios</option>
+                    <option value='Motor'>Motor y accesorios</option>
                     <option value='Deporte'>Deporte</option>
                     <option value='Libros, Música y Películas'>Libros, Música y Películas</option>
                     <option value='Electrodomésticos'>Electrodomésticos</option>

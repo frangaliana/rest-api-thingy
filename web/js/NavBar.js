@@ -23,6 +23,10 @@ var NavBar = React.createClass({
 		this.props.OnNearbyProducts();
 	},
 
+	handleClickMyWishlist: function(){
+		this.props.OnWishlist();
+	},
+
 	elementosBarra() {
 		if (this.props.logueado) {
 			return(
@@ -34,7 +38,7 @@ var NavBar = React.createClass({
       		 </Nav>
 					 <Nav pullRight>
 						<NavItem eventKey={1}>Bienvenido {localStorage.getItem('usuario')}</NavItem>
-						<NavItem eventKey={7} onClick={this.handleClickAllProducts}>Mi WishList</NavItem>
+						<NavItem eventKey={7} onClick={this.handleClickMyWishlist}>Mi WishList</NavItem>
 						<NavItem eventKey={3} href="http://localhost:3000/web/users.html">Mi Perfil</NavItem>
 	       	 	<NavItem eventKey={2} onClick={this.handleClickLogout}>Logout</NavItem>
 	       	 </Nav>

@@ -38,7 +38,7 @@ function getProducts(req, res) {
       return next(new Error())
     }
   } else {
-    limit = 5;
+    limit = 10;
   }
 
   var query = {};
@@ -101,15 +101,120 @@ function getProducts(req, res) {
 
 //FALTA CREARLO BIEN
 function getNearbyProducts(req, res) {
-  let resultFinal = [];
-  var limit;
   let userId = req.user;
+  let point;
+
+  var geoOptions = {
+    spherical: true,
+    maxDistance: 500
+  }
+
+  User.findById(userId, {password:0})
+    .populate('location','coordinates')
+    .exec(function (err, result) {
+        if (err) console.log('No se ha podido encontrar la localización')
+
+        point = {
+          type: "Point",
+          coordinates: [parseFloat(result.location.coordinates[0]),parseFloat(result.location.coordinates[1])]
+        }
+
+        Location.geoNear(point,geoOptions, function(err, resultLocations) {
+          for(var i = resultLocations.length - 1 ; i >= 0 ; i--){
+            var nearLocation = resultLocations[i].obj.id
+            var queryUser = {"location": nearLocation}
+             User.find(queryUser)
+              .exec(function (err, resultUsers) {
+                for(var j = resultUsers.length - 1 ; j >= 0; j--) {
+                  if(resultUsers[j] !== undefined){
+                    var exactUser = resultUsers[j].id
+
+                    var limit;
+
+                    if(req.query.limit) {
+                      limit = parseInt(req.query.limit)
+                      if(isNaN(limit)){
+                        return next(new Error())
+                      }
+                    } else {
+                      limit = 10;
+                    }
+
+                    var queryProduct = {"user": exactUser}
+
+                    if(req.query.before) {
+                      queryProduct = {"user": exactUser, "_id" : {$lt: req.query.before}};
+                    }else if (req.query.after) {
+                      queryProduct = {"user": exactUser, "_id" : {$gt: req.query.after}};
+                    }
+
+                    Product.find(queryProduct)
+                      .limit(limit)
+                      .populate('user')
+                      .exec(function (err, resultProducts) {
+
+                        var finalProducts = [];
+                        for(var k = resultProducts.length - 1 ; k >= 0; k--){
+                            if(resultProducts[k] !== undefined){
+                              finalProducts.push(resultProducts[k])
+                            }
+                        }
+
+                        if(finalProducts.length > 0){
+                          if(req.query.before){
+                            products.reverse();
+                          }
+                          var finalResult = {
+                                data: finalProducts,
+                                paging: {
+                                  cursors: {
+                                    before: finalProducts[0].id,
+                                    after: finalProducts[finalProducts.length-1].id
+                                  },
+                                  previous: 'localhost:3000/api/products?before='+finalProducts[0].id,
+                                  next: 'localhost:3000/api/products?after='+finalProducts[finalProducts.length-1].id,
+                                },
+                                links: {
+                                  self: 'localhost:3000/api/products',
+                                  users: 'localhost:3000/api/users'
+                                }
+                              }
+                          } else {
+                              var finalResult = {
+                                    data: finalProducts,
+                                    paging: {
+                                    cursors: {
+                                      before:undefined,
+                                      after:undefined
+                                      },
+                                      previous: undefined,
+                                      next: undefined
+                                    },
+                                    links: {
+                                      self: 'localhost:3000/api/products',
+                                      users: 'localhost:3000/api/users'
+                                    }
+                                  }
+                          }
+                        console.log('sending response!')
+                        res.status(200).send(finalResult);
+                      })
+                  }
+                }
+              })
+          }
+        })
+
+  })
+
+  /*var limit;
+  let resultFinal = []
 
   User.findById(userId, {password:0}, (err, user) => {
     Location.populate(user, {path: "location"}, function(err, result){
       Location.geoNear(
         {type:'Point', coordinates: [parseFloat(result.location.coordinates[0]),parseFloat(result.location.coordinates[1])]},
-        {maxDistance:100000, spherical: true}
+        {maxDistance:10, spherical: true}
       ).then(function(locations){
 
         for(var i = locations.length - 1; i >= 0; i--){
@@ -158,6 +263,7 @@ function getNearbyProducts(req, res) {
                           }
                         }
                   }
+                  console.log('sending response!')
                   res.setHeader('Content-Type', 'application/json');
                   res.status(200).send(resultFinal);
 
@@ -168,7 +274,7 @@ function getNearbyProducts(req, res) {
         }
       })
     })
-  })
+  })*/
 
 }
 
@@ -261,11 +367,11 @@ function saveProduct(req, res) {
   product.salescomment = req.body.salescomment;
 
   product.save((err, productStored) => {
-    if (err) { res.status(500).send({ message: `Error al guardar en base de datos: ${err}` })
+    if (err) { res.status(500).send({ message: `Error al registrar el producto: ${err}` })
     } else {
       res.setHeader('Content-Type', 'application/json');
       res.header('Location','http://localhost:3000/api/products/'+product.id)
-
+      console.log(productStored)
       var result = {
         product: productStored,
         links: {

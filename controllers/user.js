@@ -107,7 +107,7 @@ function getUsers(req, res) {
       return next(new Error())
     }
   } else {
-    limit = 5;
+    limit = 20;
   }
 
   var query = {};

@@ -19,7 +19,7 @@ const ProductSchema = Schema({
   },
   categoryproduct: {
     type: String,
-    enum:['Moda y Accesorios', 'Motor y Accesorios', 'Electrónica', 'Deporte', 'Libros, Música y Películas', 'Electrodomésticos', 'Servicios', 'Muebles y Decoración', 'Otros'],
+    enum:['Moda y Accesorios', 'Motor', 'Electrónica', 'Deporte', 'Libros, Música y Películas', 'Electrodomésticos', 'Servicios', 'Muebles y Decoración', 'Otros'],
     default: 'Electrónica'
   },
   description: {

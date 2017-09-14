@@ -3,6 +3,7 @@
 const express = require('express');
 const productCtrl = require('../controllers/product');
 const userCtrl = require('../controllers/user');
+const wishlistCtrl = require('../controllers/wishlist');
 const auth = require('../middlewares/auth');
 const api = express.Router();
 
@@ -16,6 +17,11 @@ api.get('/users/:userId/products', auth, productCtrl.getProductsUser);
 
 //Rutas de productos cercanos
 api.get('/nearbys', auth, productCtrl.getNearbyProducts)
+
+//Rutas de wishlist
+api.get('/wishlist', auth, wishlistCtrl.getWishlist);
+api.post('/wishlist', auth, wishlistCtrl.saveProductWishlist);
+api.delete('/wishlist/:productId', auth, wishlistCtrl.deleteProductWishlist)
 
 //Rutas de users
 api.post('/signup', userCtrl.signUp);

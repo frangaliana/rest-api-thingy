@@ -18,7 +18,8 @@ var ShowProduct = React.createClass({
     return {
       showModal: true,
       data: {},
-      user: {}
+      user: {},
+      preferred: false
     }
   },
   setData(data) {
@@ -28,6 +29,41 @@ var ShowProduct = React.createClass({
   close() {
     this.setState({showModal: false})
     this.props.cerrar();
+  },
+  //Método que añade a Wishlist
+  handleClickPreferred: function(){
+    if(!this.state.preferred) {
+      $.ajax
+            ({
+              type: "POST",
+              url: 'http://localhost:3000/api/wishlist',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              dataType: "json",
+              data: '{"products":"'+this.props.id+'"}',
+              beforeSend: function (xhr) {
+                xhr.setRequestHeader ("Authorization", "Bearer " + localStorage.getItem('token'));
+              },
+              success: function (res){
+                this.handlePreferred();
+                this.props.mensaje('¡Producto enviado a Wishlist!');
+              }.bind(this),
+              error: function (respuesta){
+                this.props.mensaje('Ha ocurrido un error');
+              }.bind(this)
+            });
+    } else {
+      this.handlePreferred();
+    }
+  },
+  //Recibe la dirección del vendedor
+  contactPurchase: function() {
+    this.props.mensaje(`¡Listo! Podrás comprar el producto contactando con su vendedor, este es su correo: ${this.state.user.email}`)
+  },
+  //Realiza el cambio de lista de favoritos
+  handlePreferred() {
+    this.setState({preferred: !this.state.preferred})
   },
   //Realizamos petición para incluir en la carga de los datos
   showData: function() {
@@ -55,6 +91,14 @@ var ShowProduct = React.createClass({
   //Carga de los datos de dicho elemento
   componentDidMount() {
     this.showData();
+  },
+  //Muestra el boton de añadir lista de deseos
+  showButtonFav(showButton){
+      if(showButton){
+        return(
+          <Button bsStyle="danger" onClick={this.handleClickPreferred} block>{this.state.preferred ? 'Eliminar de la Wishlist' : 'Añadir a WishList'}</Button>
+        )
+      }
   },
 
   render() {
@@ -96,8 +140,8 @@ var ShowProduct = React.createClass({
 
           <Modal.Footer>
             <ButtonGroup vertical block>
-              <Button bsStyle="danger" onClick={this.close} block>Añadir a WishList</Button>
-              <Button bsStyle="info" onClick={this.close} block>¡Lo quiero!</Button>
+              {this.showButtonFav(this.props.showButton)}
+              <Button bsStyle="info" onClick={this.contactPurchase} block>¡Lo quiero!</Button>
             </ButtonGroup>
           </Modal.Footer>
         </Modal>
