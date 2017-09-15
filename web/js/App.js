@@ -7,6 +7,9 @@ var MyProducts = require('./MyProducts')
 var Products = require('./Products')
 var NearbyProducts = require('./NearbyProducts')
 var MyWishlist = require('./MyWishlist')
+var FormGroup = require('react-bootstrap/lib/FormGroup')
+var FormControl = require('react-bootstrap/lib/FormControl')
+var Button = require('react-bootstrap/lib/Button')
 
 var App = React.createClass({
 	getInitialState: function() {
@@ -19,7 +22,8 @@ var App = React.createClass({
 						registered: false,
             mensaje: '',
             data: [],
-						datafavourite: [{products: []}]
+						datafavourite: [{products: []}],
+						count: 0
         }
    },
    //Metodos para que otros componentes puedan cambiar el estado del principal
@@ -87,22 +91,50 @@ var App = React.createClass({
 		} else if(this.state.logueado && this.state.allProducts && !this.state.myProducts && !this.state.nearbyProducts && !this.state.wishlist) {
 				container = (
 					<div style={{paddingLeft:100, paddingRight:100}}>
-						<h2>Productos</h2>
-						<Products limit="5" mensaje = {this.setMensaje} data = {this.state.data} setData = {this.setData}/>
+						<div>
+							<div className="col-md-10">
+								<FormGroup>
+									 <FormControl type="text" placeholder="Escribe aquí aquello que buscas..."/>
+								</FormGroup>
+							</div>
+							<div className="col-md-2" style={{textAlign: 'center'}}>
+								<Button type="submit" style={{paddingLeft:100, paddingRight:100}}>Buscar</Button>
+							</div>
+						</div>
+						<br/>
+
+						<div className="col-md-12">
+							<h2>Productos</h2>
+							<Products limit="5" mensaje = {this.setMensaje} data = {this.state.data} setData = {this.setData} count = {this.state.count}/>
+						</div>
 					</div>
 				);
 			} else if(this.state.logueado && this.state.nearbyProducts && !this.state.allProducts && !this.state.myProducts && !this.state.wishlist) {
 					container = (
 						<div style={{paddingLeft:100, paddingRight:100}}>
-							<h2>Productos cercanos a tu zona</h2>
-							<NearbyProducts limit="20" mensaje = {this.setMensaje} data = {this.state.data} setData = {this.setData}/>
+							<div>
+								<div className="col-md-10">
+									<FormGroup>
+										 <FormControl type="text" placeholder="Escribe aquí aquello que buscas..."/>
+									</FormGroup>
+								</div>
+								<div className="col-md-2" style={{textAlign: 'center'}}>
+									<Button type="submit" style={{paddingLeft:100, paddingRight:100}}>Buscar</Button>
+								</div>
+							</div>
+							<br/>
+
+							<div className="col-md-12">
+								<h2>Productos cercanos a tu zona</h2>
+								<NearbyProducts limit="20" mensaje = {this.setMensaje} data = {this.state.data} setData = {this.setData} count = {this.state.count}/>
+							</div>
 						</div>
 					);
 			} else if (this.state.logueado && this.state.wishlist && !this.state.nearbyProducts && !this.state.allProducts && !this.state.myProducts) {
 					container = (
 						<div style={{paddingLeft:100, paddingRight:100}}>
 							<h2>Mi lista de deseos</h2>
-							<MyWishlist limit="20" mensaje = {this.setMensaje} data = {this.state.datafavourite} setData = {this.setFavouriteData}/>
+							<MyWishlist limit="20" mensaje = {this.setMensaje} data = {this.state.datafavourite} setData = {this.setFavouriteData} count = {this.state.count}/>
 						</div>
 					);
 			} else {

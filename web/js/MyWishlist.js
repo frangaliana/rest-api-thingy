@@ -12,6 +12,7 @@ var MyWishlist = React.createClass({
             button_siguiente: true,           //estado del boton siguiente (validacion)
             button_anterior: true,            //estado del boton anterior (validacion)
 						showID: null,
+						count: this.props.count
         }
     },
     actualizarData: function(direccion) {
@@ -150,7 +151,7 @@ var MyWishlist = React.createClass({
 					for(var j = listResult.products.length - 1; j >= 0; j--){
 						if(listResult.products[j]._id === this.state.showID) {
 							modal = (
-								<ShowProduct id = {this.state.showID} mensaje = {this.props.mensaje} cerrar = {this.showCerrar} showButton = {false}/>
+								<ShowProduct id = {this.state.showID} mensaje = {this.props.mensaje} cerrar = {this.showCerrar} showButton = {false} count = {this.state.count}/>
 							);
 							break;
 						}

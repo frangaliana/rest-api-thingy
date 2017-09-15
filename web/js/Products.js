@@ -12,6 +12,7 @@ var Products = React.createClass({
             button_siguiente: true,           //estado del boton siguiente (validacion)
             button_anterior: true,            //estado del boton anterior (validacion)
             showID: null,                   	//id del producto a mostrar (estado de visibilidad del modal)
+						count: this.props.count
         }
     },
     actualizarData: function(direccion) {
@@ -74,6 +75,7 @@ var Products = React.createClass({
 		//Mostramos el producto de forma detallada
 		showProduct(id) {
       this.setState({showID: id})
+			this.setState({count: this.state.count + 1})
     },
 		//Cerramos la vista de sólo producto
 		showCerrar() {
@@ -99,7 +101,7 @@ var Products = React.createClass({
 	        for(var i = this.props.data.length - 1; i >= 0; i--) {
 	            if(this.props.data[i]._id === this.state.showID) {
 								modal = (
-	                <ShowProduct id = {this.state.showID} mensaje = {this.props.mensaje} cerrar = {this.showCerrar} showButton = {true}/>
+	                <ShowProduct id = {this.state.showID} mensaje = {this.props.mensaje} cerrar = {this.showCerrar} showButton = {true} count = {this.state.count}/>
 	              );
 	              break;
 	            }
@@ -108,6 +110,7 @@ var Products = React.createClass({
 
 			return <div className="table-responsive">
 	          {modal}
+
 						<Table striped condensed>
 	            <thead>
 	              <tr>

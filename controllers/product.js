@@ -99,189 +99,116 @@ function getProducts(req, res) {
   });
 }
 
-//FALTA CREARLO BIEN
 function getNearbyProducts(req, res) {
-  let userId = req.user;
-  /*let point;
+  var userId = req.user;
 
-  var geoOptions = {
-    spherical: true,
-    maxDistance: 500
-  }
+  var promiseUser = User.findById(userId, {password: 0})
+    .populate('location')
+    .exec()
 
-  User.findById(userId, {password:0})
-    .populate('location','coordinates')
-    .exec(function (err, result) {
-        if (err) console.log('No se ha podido encontrar la localización')
-
-        point = {
-          type: "Point",
-          coordinates: [parseFloat(result.location.coordinates[0]),parseFloat(result.location.coordinates[1])]
-        }
-
-        Location.geoNear(point,geoOptions, function(err, resultLocations) {
-          for(var i = resultLocations.length - 1 ; i >= 0 ; i--){
-            var nearLocation = resultLocations[i].obj.id
-            var queryUser = {"location": nearLocation}
-             User.find(queryUser)
-              .exec(function (err, resultUsers) {
-                for(var j = resultUsers.length - 1 ; j >= 0; j--) {
-                  if(resultUsers[j] !== undefined){
-                    var exactUser = resultUsers[j].id
-
-                    var limit;
-
-                    if(req.query.limit) {
-                      limit = parseInt(req.query.limit)
-                      if(isNaN(limit)){
-                        return next(new Error())
-                      }
-                    } else {
-                      limit = 10;
-                    }
-
-                    var queryProduct = {"user": exactUser}
-
-                    if(req.query.before) {
-                      queryProduct = {"user": exactUser, "_id" : {$lt: req.query.before}};
-                    }else if (req.query.after) {
-                      queryProduct = {"user": exactUser, "_id" : {$gt: req.query.after}};
-                    }
-
-                    Product.find(queryProduct)
-                      .limit(limit)
-                      .populate('user')
-                      .exec(function (err, resultProducts) {
-
-                        var finalProducts = [];
-                        for(var k = resultProducts.length - 1 ; k >= 0; k--){
-                            if(resultProducts[k] !== undefined){
-                              finalProducts.push(resultProducts[k])
-                            }
-                        }
-
-                        if(finalProducts.length > 0){
-                          if(req.query.before){
-                            products.reverse();
-                          }
-                          var finalResult = {
-                                data: finalProducts,
-                                paging: {
-                                  cursors: {
-                                    before: finalProducts[0].id,
-                                    after: finalProducts[finalProducts.length-1].id
-                                  },
-                                  previous: 'localhost:3000/api/products?before='+finalProducts[0].id,
-                                  next: 'localhost:3000/api/products?after='+finalProducts[finalProducts.length-1].id,
-                                },
-                                links: {
-                                  self: 'localhost:3000/api/products',
-                                  users: 'localhost:3000/api/users'
-                                }
-                              }
-                          } else {
-                              var finalResult = {
-                                    data: finalProducts,
-                                    paging: {
-                                    cursors: {
-                                      before:undefined,
-                                      after:undefined
-                                      },
-                                      previous: undefined,
-                                      next: undefined
-                                    },
-                                    links: {
-                                      self: 'localhost:3000/api/products',
-                                      users: 'localhost:3000/api/users'
-                                    }
-                                  }
-                          }
-                        console.log('sending response!')
-                        res.status(200).send(finalResult);
-                      })
+  promiseUser
+    .then(function(result){
+      return result.location;
+    })
+    .then( function(resultUser){
+        return Location.geoNear(
+                {type:'Point', coordinates: [parseFloat(resultUser.coordinates[0]),parseFloat(resultUser.coordinates[1])]},
+                {maxDistance:100000, spherical: true}
+              ).then(function(locsGeoNear){
+                var resultGeoNear = []
+                for(var i = locsGeoNear.length - 1; i >= 0; i--){
+                  if(resultUser.id != locsGeoNear[i].obj.id){
+                    resultGeoNear.push(locsGeoNear[i].obj.id)
                   }
                 }
+                return resultGeoNear
               })
-          }
-        })
-
-  })*/
-
-  var limit;
-  let resultFinal = []
-
-  User.findById(userId, {password:0}, (err, user) => {
-    Location.populate(user, {path: "location"}, function(err, result){
-      Location.geoNear(
-        {type:'Point', coordinates: [parseFloat(result.location.coordinates[0]),parseFloat(result.location.coordinates[1])]},
-        {maxDistance:1, spherical: true}
-      ).then(function(locations){
-        for(var i = locations.length - 1; i >= 0; i--){
-          if(result.location._id != locations[i].obj.id){
-            var locationId = locations[i].obj.id;
-          }
-
-          User.find({"location": locationId})
-           .exec((err, result) =>{
-             if(result.length > 0){
-
-               for(var j = result.length - 1; j >= 0; j--){
-                  //Control para no sacar resultados de tu propio id
-                   var userId = result[j].id;
-
-                 Product.find(userId, (err,products) =>{
-                   if(products.length > 0){
-
-                     resultFinal = {
-                           data: products,
-                           paging: {
-                             cursors: {
-                               before: products[0].id,
-                               after: products[products.length-1].id
-                             },
-                             previous: 'localhost:3000/api/products?before='+products[0].id,
-                             next: 'localhost:3000/api/products?after='+products[products.length-1].id,
-                           },
-                           links: {
-                             self: 'localhost:3000/api/products',
-                             users: 'localhost:3000/api/users'
-                           }
-                         }
-                  } else {
-                    resultFinal = {
-                          data: products,
-                          paging: {
-                          cursors: {
-                            before:undefined,
-                            after:undefined
-                            },
-                            previous: undefined,
-                            next: undefined
-                          },
-                          links: {
-                            self: 'localhost:3000/api/products',
-                            users: 'localhost:3000/api/users'
-                          }
-                        }
-                  }
-
-                for(var r = 0 ; r < 1 ; r++){
-                    console.log(`sending response!`)
-                    console.log(resultFinal)
-                    console.log('-----------------')
-                    res.setHeader('Content-Type', 'application/json');
-                    res.status(200).send(resultFinal);
-                  }
-
-                 })
-               }
-             }
-          })
-        }
-      })
     })
-  })
+    .then(function(resultSearchLocs){
+      var queryUsersByLocation = {'location': {$in: resultSearchLocs}}
 
+      return User.find(queryUsersByLocation, {password: 0})
+              .exec()
+             .then(function(usersSearchs){
+               var resultUsers = []
+               for(var i = usersSearchs.length - 1; i >= 0; i--){
+                 if(userId != usersSearchs[i].id){
+                   resultUsers.push(usersSearchs[i].id)
+                 }
+               }
+               return resultUsers
+             })
+    })
+    .then(function(resultSearchUsers){
+      var limit;
+
+      if(req.query.limit) {
+        limit = parseInt(req.query.limit)
+        if(isNaN(limit)){
+          return next(new Error())
+        }
+      } else {
+        limit = 10;
+      }
+
+      var queryProductsByUsers = {'user': {$in: resultSearchUsers}}
+      //Para obtener la página anterior a un id
+      if (req.query.before) {
+        queryProductsByUsers = {'user': {$in: resultSearchUsers}, "_id" : {$lt: req.query.before}};
+      //Para obtener la página posterior a un id
+      } else if (req.query.after) {
+        queryProductsByUsers = {'user': {$in: resultSearchUsers}, "_id": {$gt: req.query.after}};
+      }
+
+      return Product.find(queryProductsByUsers)
+              .limit(limit)
+              .exec()
+    })
+    .then(function(resultSearchProducts){
+      if(resultSearchProducts.length > 0){
+        if(req.query.before){
+          resultSearchProducts.reverse();
+        }
+
+        var resultFinal = {
+              data: resultSearchProducts,
+              paging: {
+                cursors: {
+                  before: resultSearchProducts[0].id,
+                  after: resultSearchProducts[resultSearchProducts.length-1].id
+                },
+                previous: 'localhost:3000/api/products?before='+resultSearchProducts[0].id,
+                next: 'localhost:3000/api/products?after='+resultSearchProducts[resultSearchProducts.length-1].id,
+              },
+              links: {
+                self: 'localhost:3000/api/products',
+                users: 'localhost:3000/api/users'
+              }
+            }
+     } else {
+       var resultFinal = {
+             data: resultSearchProducts,
+             paging: {
+             cursors: {
+               before:undefined,
+               after:undefined
+               },
+               previous: undefined,
+               next: undefined
+             },
+             links: {
+               self: 'localhost:3000/api/products',
+               users: 'localhost:3000/api/users'
+             }
+           }
+     }
+
+     res.setHeader('Content-Type', 'application/json');
+     res.status(200).send(resultFinal);
+    })
+    .catch(function(err){
+      console.log(`${err}`)
+    })
 }
 
 function getProductsUser(req, res) {

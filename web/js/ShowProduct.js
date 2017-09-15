@@ -122,7 +122,7 @@ var ShowProduct = React.createClass({
 
               <div style={{marginTop: "-10px"}}>
                 <img src="/web/public/images/icon-visited.png" height="42" width="42"/>
-                <p style={{fontSize: "12px", display: "inline", marginLeft: "-5px", marginRight: "10px"}}>{this.state.data.visits}</p>
+                <p style={{fontSize: "12px", display: "inline", marginLeft: "-5px", marginRight: "10px"}}>{this.props.count}</p>
                 <img src="/web/public/images/icon-category.png" height="15" width="15"/>
                 <p style={{fontSize: "12px", display: "inline", marginLeft: "7px"}}>{this.state.data.categoryproduct}</p>
                 <img style={{marginLeft: "10px"}} src="/web/public/images/icon-time.png" height="15" width="15"/>

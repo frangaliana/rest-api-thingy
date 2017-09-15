@@ -48,11 +48,10 @@ var NavBar = React.createClass({
 	},
 
 	render: function() {
+
 		return <Navbar >
 		    <Navbar.Header>
-		      <Navbar.Brand>
-		        <a href="http://localhost:3000/web">Thingy</a>
-		      </Navbar.Brand>
+		        <a href="http://localhost:3000/web"><img src="/web/public/images/logo-thingy.png" height="52" width="84" alt="thingy" /></a>
 		    </Navbar.Header>
 	    	{this.elementosBarra()}
 	  </Navbar>

@@ -2,6 +2,11 @@ var React = require('react')
 var Glyphicon = require('react-bootstrap/lib/Glyphicon')
 var Button = require('react-bootstrap/lib/Button')
 var Table = require('react-bootstrap/lib/Table')
+var ListGroup = require('react-bootstrap/lib/ListGroup')
+var ListGroupItem = require('react-bootstrap/lib/ListGroupItem')
+var Grid = require('react-bootstrap/lib/Grid')
+var Row = require('react-bootstrap/lib/Row')
+var Col = require('react-bootstrap/lib/Col')
 var ShowProduct = require('./ShowProduct')
 
 var NearbyProducts = React.createClass({
@@ -12,6 +17,7 @@ var NearbyProducts = React.createClass({
             button_siguiente: true,           //estado del boton siguiente (validacion)
             button_anterior: true,            //estado del boton anterior (validacion)
             showID: null,                   	//id del producto a mostrar (estado de visibilidad del modal)
+						count: this.props.count
         }
     },
     actualizarData: function(direccion) {
@@ -74,6 +80,7 @@ var NearbyProducts = React.createClass({
 		//Mostramos el producto de forma detallada
 		showProduct(id) {
       this.setState({showID: id})
+			this.setState({count: this.state.count + 1})
     },
 		//Cerramos la vista de sólo producto
 		showCerrar() {
@@ -99,7 +106,7 @@ var NearbyProducts = React.createClass({
 	        for(var i = this.props.data.length - 1; i >= 0; i--) {
 	            if(this.props.data[i]._id === this.state.showID) {
 								modal = (
-	                <ShowProduct id = {this.state.showID} mensaje = {this.props.mensaje} cerrar = {this.showCerrar} showButton = {true}/>
+	                <ShowProduct id = {this.state.showID} mensaje = {this.props.mensaje} cerrar = {this.showCerrar} showButton = {true} count = {this.state.count}/>
 	              );
 	              break;
 	            }
@@ -107,8 +114,15 @@ var NearbyProducts = React.createClass({
 				}
 
 			return <div className="table-responsive">
-	          {modal}
-	          <Table striped condensed>
+						{modal}
+							<div className="col-md-5" style={{textAlign: 'center'}}></div>
+						  <div className="col-md-2" style={{textAlign: 'center', marginLeft: -30}}>
+									<ListGroupItem bsStyle="info" style={{borderRadius: 80}}><Glyphicon glyph="road" style={{marginRight:10}}/>A 1km de ti</ListGroupItem>
+							</div>
+							<div className="col-md-2" style={{textAlign: 'center'}}></div>
+							
+
+						<Table striped condensed>
 	            <thead>
 	              <tr>
 	                <th>Producto</th>
@@ -130,9 +144,9 @@ var NearbyProducts = React.createClass({
 	            ))}
 			  		  </Table>
 			  <div className="col-md-6 col-md-offset-5 col-sm-8 col-sm-offset-2">
-			  <Button bsStyle="primary" onClick={this.handleClickAnterior} disabled={!this.state.button_anterior}>Anterior</Button>
-			  <Button bsStyle="primary" onClick={this.handleClickSiguiente} disabled={!this.state.button_siguiente} style={{marginLeft:25}}>Siguiente</Button>
-			 </div>
+				  <Button bsStyle="primary" onClick={this.handleClickAnterior} disabled={!this.state.button_anterior}>Anterior</Button>
+				  <Button bsStyle="primary" onClick={this.handleClickSiguiente} disabled={!this.state.button_siguiente} style={{marginLeft:25}}>Siguiente</Button>
+			 	</div>
 			 </div>
 		}
 	})
