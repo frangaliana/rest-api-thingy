@@ -113,7 +113,7 @@ var ShowProduct = React.createClass({
 
           <Modal.Body>
             <div>
-              <Image style={{display: "block", marginLeft: "auto", marginRight: "auto"}} src="/web/public/images/bed.jpg" height="300" width="300" rounded/>
+              <Image style={{display: "block", marginLeft: "auto", marginRight: "auto"}} src={this.state.data.productimg} height="300" width="400" rounded/>
             </div>
 
             <div>

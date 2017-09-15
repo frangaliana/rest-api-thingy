@@ -44,6 +44,10 @@ const ProductSchema = Schema({
     min: min,
     default: 1
   },
+  productimg: {
+    type: String,
+    default: "/web/public/images/iphone6s.jpg"
+  },
   salescomment: {
     type: String,
     default: 'Perfecto'

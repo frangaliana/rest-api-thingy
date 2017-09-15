@@ -10,6 +10,9 @@ var MyWishlist = require('./MyWishlist')
 var FormGroup = require('react-bootstrap/lib/FormGroup')
 var FormControl = require('react-bootstrap/lib/FormControl')
 var Button = require('react-bootstrap/lib/Button')
+var Col = require('react-bootstrap/lib/Col')
+var Row = require('react-bootstrap/lib/Row')
+var Grid = require('react-bootstrap/lib/Grid')
 
 var App = React.createClass({
 	getInitialState: function() {
@@ -31,7 +34,7 @@ var App = React.createClass({
       this.setState({logueado: true, mensaje: ''});
    },
    logout() {
-      this.setState({logueado: false, mensaje: 'Has cerrado la sesión'});
+      this.setState({logueado: false, mensaje: 'Has cerrado la sesión ¡Hasta pronto!'});
    },
 	 OnMyProducts() {
 		 this.setState({myProducts: true, allProducts: false, nearbyProducts: false, wishlist: false})
@@ -139,9 +142,16 @@ var App = React.createClass({
 					);
 			} else {
 	   		container = (
-	   			<div className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-	        	<Login login = {this.login} mensaje = {this.setMensaje} abrir = {this.registerUser}></Login>
-	        </div>
+					<Grid>
+					<Row className="show-grid">
+						<Col md={4} mdPush={6} style={{paddingTop: 150}}>
+							<Login login = {this.login} mensaje = {this.setMensaje} abrir = {this.registerUser}></Login>
+						</Col>
+						<Col md={6} mdPull={6} style={{paddingTop: 150, paddingLeft: 200}}>
+							<img src="/web/public/images/logoyfrase.png" height="305" width="553" alt="thingyHome" />
+						</Col>
+					</Row>
+					</Grid>
 	   		);
 	   	}
 

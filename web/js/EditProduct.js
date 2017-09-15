@@ -15,7 +15,7 @@ var EditProduct = React.createClass({
          validado_description:null,
          price: this.props.price,
          validado_price:null,
-         categoryproduct: this.props.category,
+         categoryproduct: this.props.categoryproduct,
          validado_category:null
 
     };
@@ -123,7 +123,7 @@ var EditProduct = React.createClass({
 
   getValidationStateCategory(categoryproduct) {
       if (categoryproduct === 'Electrónica' ||
-          categoryproduct === 'Moda y accesorios' ||
+          categoryproduct === 'Moda y Accesorios' ||
           categoryproduct === 'Motor' ||
           categoryproduct === 'Deporte' ||
           categoryproduct === 'Libros, Música y Películas' ||
@@ -174,10 +174,10 @@ var EditProduct = React.createClass({
               <FormGroup validationState={this.state.validado_category}>
                 <ControlLabel>Categoría</ControlLabel>
                 <InputGroup>
-                  <FormControl componentClass="select" placeholder="Elige la categoría del producto" onChange={this.handleCategorySelect} id="categoryproduct">
+                  <FormControl componentClass="select" placeholder="Elige la categoría del producto" onChange={this.handleCategorySelect} value={this.state.categoryproduct} id="categoryproduct">
                     <option value=''>Selecciona la categoría</option>
                     <option value='Electrónica'>Electrónica</option>
-                    <option value='Moda y accesorios'>Moda y accesorios</option>
+                    <option value='Moda y Accesorios'>Moda y accesorios</option>
                     <option value='Motor'>Motor y accesorios</option>
                     <option value='Deporte'>Deporte</option>
                     <option value='Libros, Música y Películas'>Libros, Música y Películas</option>

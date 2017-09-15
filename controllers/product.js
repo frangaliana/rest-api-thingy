@@ -113,7 +113,7 @@ function getNearbyProducts(req, res) {
     .then( function(resultUser){
         return Location.geoNear(
                 {type:'Point', coordinates: [parseFloat(resultUser.coordinates[0]),parseFloat(resultUser.coordinates[1])]},
-                {maxDistance:100000, spherical: true}
+                {maxDistance:1000, spherical: true}
               ).then(function(locsGeoNear){
                 var resultGeoNear = []
                 for(var i = locsGeoNear.length - 1; i >= 0; i--){
@@ -221,7 +221,7 @@ function getProductsUser(req, res) {
       return next(new Error())
     }
   } else {
-    limit = 5;
+    limit = 10;
   }
 
   var query = {"user": userId};
@@ -285,7 +285,6 @@ function getProductsUser(req, res) {
 
 function saveProduct(req, res) {
   console.log('POST /api/products');
-  console.log(req.body);
 
   let product = new Product();
   product.title = req.body.title;
@@ -304,7 +303,6 @@ function saveProduct(req, res) {
     } else {
       res.setHeader('Content-Type', 'application/json');
       res.header('Location','http://localhost:3000/api/products/'+product.id)
-      console.log(productStored)
       var result = {
         product: productStored,
         links: {

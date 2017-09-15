@@ -2,11 +2,7 @@ var React = require('react')
 var Glyphicon = require('react-bootstrap/lib/Glyphicon')
 var Button = require('react-bootstrap/lib/Button')
 var Table = require('react-bootstrap/lib/Table')
-var ListGroup = require('react-bootstrap/lib/ListGroup')
 var ListGroupItem = require('react-bootstrap/lib/ListGroupItem')
-var Grid = require('react-bootstrap/lib/Grid')
-var Row = require('react-bootstrap/lib/Row')
-var Col = require('react-bootstrap/lib/Col')
 var ShowProduct = require('./ShowProduct')
 
 var NearbyProducts = React.createClass({
@@ -120,7 +116,7 @@ var NearbyProducts = React.createClass({
 									<ListGroupItem bsStyle="info" style={{borderRadius: 80}}><Glyphicon glyph="road" style={{marginRight:10}}/>A 1km de ti</ListGroupItem>
 							</div>
 							<div className="col-md-2" style={{textAlign: 'center'}}></div>
-							
+
 
 						<Table striped condensed>
 	            <thead>
