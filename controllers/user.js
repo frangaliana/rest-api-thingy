@@ -34,7 +34,7 @@ function signUp(req, res) {
           location: result.id
         });
 
-        user.userimg = user.gravatar()
+        user.userimg = "/web/public/images/fran.jpg"
 
         user.save((err) => {
           if (err) res.status(500).send({ message: `Error al registrar el usuario ${err}` });
