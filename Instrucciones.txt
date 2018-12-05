@@ -5,7 +5,6 @@
 Datos:
 -------------------------------------
 Nombre: Francisco Javier Galiana Cano
-DNI: 74385024B
 
 
 
